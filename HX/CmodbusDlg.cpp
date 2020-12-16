@@ -62,25 +62,31 @@ bool SendOnce_Vision = false;
 int DisconnectNum = 0;
 //背板型号
 CString backboard;
-//是否在喷胶
+//胶机状态
 bool SprayFlag = false;
-CString s_Spray;
 //喷涂批次
 DWORD SprayBatch = 0;
-//X Y Theta
-double X_Loc;
-double Y_Loc;
-double Theta_Loc;
 //是否良品
 bool GoodFlag = true;
-CString s_Good = _T("良品");//良品
-CString s_Bad = _T("不良品");//不良品
+
 //PLC正常
 bool PlcFlag = true;
 //通信状态
 bool DisconnectFlag = false;
 //急停标志位
 bool StopFlag = false;
+
+//插入数据库所需变量
+//防止识别完成后重复插入，识别完置0；插入完成置1
+int insertdata = 0;
+//良品
+CString data_good;
+//胶机状态
+CString data_spray;
+//PLC状态
+CString data_plc;
+//急停
+CString data_stop;
 
 //这个数据暂时不用发完就清空，因为每一次都会把对应的值覆盖进去
 //WORD GlueTemp[200];//把胶条数据从函数里边提取出来变成全局的，用以发送
@@ -859,7 +865,7 @@ void CmodbusDlg::OnReceive()
 				//tt.Format(_T("%d"), T2 - T1);//前后之差即程序运行时间  
 				//MessageBox(tt);
 
-				//背板没到，没有喷胶，PLC正常，没有急停
+				//背板没到，没有停机，PLC正常，没有急停
 			    if (RecStr == "0") 
 			    {
 			        //MessageBox(_T("相等"));
@@ -871,7 +877,7 @@ void CmodbusDlg::OnReceive()
 					//背板不在（离开）要把这个置为false，方便下一次进入程序
 					IdentifyDone = false;
 			    }
-				//背板没到，发生喷胶，PLC正常，没有急停
+				//背板没到，喷胶停机，PLC正常，没有急停
 			    else if (RecStr == "1")
 			    {
 					ArriveFlag = false;
@@ -882,7 +888,7 @@ void CmodbusDlg::OnReceive()
 					//背板不在（离开）要把这个置为false，方便下一次进入程序
 					IdentifyDone = false;
 			    }
-				//背板到位	没有喷胶	PLC正常	没有急停
+				//背板到位	没有停机	PLC正常	没有急停
 				else if (RecStr == "2")
 				{
 					ArriveFlag = true;
@@ -890,7 +896,7 @@ void CmodbusDlg::OnReceive()
 					PlcFlag = true;
 					StopFlag = false;
 				}
-				//背板到位	发生喷胶	PLC正常	没有急停
+				//背板到位	停机	PLC正常	没有急停
 				else if (RecStr == "3")
 				{
 					ArriveFlag = true;
@@ -898,7 +904,7 @@ void CmodbusDlg::OnReceive()
 					PlcFlag = true;
 					StopFlag = false;
 				}
-				//背板没到	没有喷胶	PLC不正常	没有急停
+				//背板没到	没有停机	PLC不正常	没有急停
 				else if (RecStr == "4")
 				{
 					ArriveFlag = false;
@@ -908,7 +914,7 @@ void CmodbusDlg::OnReceive()
 
 					IdentifyDone = false;
 				}
-				//背板没到	发生喷胶	PLC不正常	没有急停
+				//背板没到	停机	PLC不正常	没有急停
 				else if (RecStr == "5")
 				{
 					ArriveFlag = false;
@@ -918,7 +924,7 @@ void CmodbusDlg::OnReceive()
 
 					IdentifyDone = false;
 				}
-				//背板到位	没有喷胶	PLC不正常	没有急停
+				//背板到位	没有停机	PLC不正常	没有急停
 				else if (RecStr == "6")
 				{
 					ArriveFlag = true;
@@ -926,7 +932,7 @@ void CmodbusDlg::OnReceive()
 					PlcFlag = false;
 					StopFlag = false;
 				}
-				//背板到位	发生喷胶	PLC不正常	没有急停
+				//背板到位	停机	PLC不正常	没有急停
 				else if (RecStr == "7")
 				{
 					ArriveFlag = true;
@@ -1030,6 +1036,25 @@ void CmodbusDlg::OnReceive()
 		//m_EditReceiveCtrl.LineScroll(m_EditReceiveCtrl.GetLineCount() - 1, 0);//将垂直滚动条滚动到最后一
 		
 	}
+	
+	//如果这里出bug 插入不进去或者重复多次插入，就把他放到iret = 7里
+	//判断是否插入数据库
+	//插入数据库,插入(LastTime  1
+	//这里判断四个flag 生成四个CString 
+	//能进来就说明当前是正常的  要不通信状态不插入数据库
+	//上一次的坐标对比设置 CString 良与不良  7 8 9 10
+	//背板型号 2
+	//喷涂批次就是当前的SprayBatch 3
+	//X Y theta坐标   4 5 6
+	if (IdentifyDone == true && insertdata == 0)
+	{
+		JudgeStatus();
+		CdataDlg *pdatadlg = CdataDlg::pDatadlg;
+		//pdatadlg->InsertDB(LastTime, backboard, SprayBatch, vs_x, vs_y, vs_theta, data_good, data_plc, data_spray, data_stop);
+		insertdata = 1;
+	}
+
+
 	delete []str;
 }
 
@@ -1497,3 +1522,23 @@ BOOL CmodbusDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 
 
 
+
+
+void CmodbusDlg::JudgeStatus()
+{
+	// TODO: 在此处添加实现代码.
+	if (SprayFlag == false)
+		data_spray = _T("正常");
+	if (SprayFlag == true)
+		data_spray = _T("停机");
+	//PLC
+	if (PlcFlag == true)
+		data_plc = _T("正常");
+	if (PlcFlag == false)
+		data_plc = _T("停机");
+	//急停
+	if (StopFlag == true)
+		data_plc = _T("急停");
+	if (StopFlag == false)
+		data_plc = _T("没有急停");
+}

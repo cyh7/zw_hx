@@ -45,7 +45,8 @@ extern bool StopFlag;
 //通信状态
 extern bool DisconnectFlag;
 extern int DisconnectNum;
-
+//防止识别完成后重复插入，识别完置0；插入完成置1
+extern int insertdata;
 // CmodbusDlg 对话框
 
 class CmodbusDlg : public CDialogEx , public has_slots<>//About CSerialPort
@@ -130,4 +131,5 @@ public:
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnBnClickedModBtnOpmon();
 	CMyButton m_mod_btn_opmod;
+	void JudgeStatus();
 };

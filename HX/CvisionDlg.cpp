@@ -18,6 +18,15 @@ bool IdentifyDone = false;
 
 //上一次时间
 CString LastTime;
+//插入数据库时的字符串
+
+//double x y theta
+//X Y Theta
+double vs_x;
+double vs_y;
+double vs_theta;
+
+
 // CvisionDlg 对话框
 
 IMPLEMENT_DYNAMIC(CvisionDlg, CDialogEx)
@@ -406,7 +415,7 @@ void CvisionDlg::OnSize(UINT nType, int cx, int cy)
 void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	static CTime preTime = CTime().GetCurrentTime();
+	//static CTime preTime = CTime().GetCurrentTime();
 	switch (nIDEvent)
 	{
 		//发送命令询问背板是否到位
@@ -468,23 +477,30 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						*/
 
 						CTime curTime = CTime().GetCurrentTime();//当前时间
-						LastTime = preTime.Format("%Y-%m-%d %H:%M:%S");
+						LastTime = curTime.Format("%Y-%m-%d %H:%M:%S");
+						//LastTime = preTime.Format("%Y-%m-%d %H:%M:%S");
 
-						if (SprayBatch > 0)
-						{
-							
-
-							CdataDlg *pdatadlg = CdataDlg::pDatadlg;
-							//pdatadlg->InsertDB(sTime, Type, n, x_loc, y_loc, theta_loc, Good, PLc, Spray, Stop);
-							//插入数据库,插入(LastTime  1
-							//这里判断四个flag 生成四个CString 
-							//能进来就说明当前是正常的  要不通信状态不插入数据库
-							//上一次的坐标对比设置 CString 良与不良  7 8 9 10
-							//背板型号 2
-							//喷涂批次就是当前的SprayBatch 3
-							//X Y theta坐标   4 5 6
-						}
-						preTime = curTime;
+						//if (SprayBatch > 0)
+						//{
+						//	
+						//	
+						//	LastTime;
+						//	SprayBatch;
+						//	backboard;
+						//	vs_x;
+						//	vs_y;
+						//	vs_theta;
+						//	
+						//	//插入数据库,插入(LastTime  1
+						//	//这里判断四个flag 生成四个CString 
+						//	//能进来就说明当前是正常的  要不通信状态不插入数据库
+						//	//上一次的坐标对比设置 CString 良与不良  7 8 9 10
+						//	//背板型号 2
+						//	//喷涂批次就是当前的SprayBatch 3
+						//	//X Y theta坐标   4 5 6
+						//}
+						//preTime = curTime;
+						insertdata = 0;
 						SprayBatch += 1;
 						//执行视觉识别程序 产生三个坐标，
 
@@ -624,4 +640,8 @@ BOOL CvisionDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 }
 
 
+
+
+
+// 状态判断
 
