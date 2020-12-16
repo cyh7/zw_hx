@@ -45,8 +45,7 @@ long m_Status_T2 = 1;
 
 //判断背板是否到达
 bool ArriveFlag = false;
-//是否执行
-bool ExecuteIdentify = true;
+
 
 //胶条数据的总数量，是从sendGlueData赋值
 //int vecGlueNum;
@@ -60,9 +59,17 @@ bool SendOnce_Vision = false;
 
 
 int DisconnectNum = 0;
+//设置界面
+//X上下限 Y上下限 THETA上下限
+double x_floor;
+double x_ceil;
+double y_floor;
+double y_ceil;
+double theta_floor;
+double theta_ceil;
 //背板型号
 CString backboard;
-//胶机状态
+//胶机状态 false没有停机 true停机
 bool SprayFlag = false;
 //喷涂批次
 DWORD SprayBatch = 0;
@@ -99,6 +106,12 @@ CmodbusDlg::CmodbusDlg(CWnd* pParent /*=nullptr*/)
 	, m_EditSend(_T(""))
 	, m_EditReceive(_T(""))
 	, m_mod_type(_T(""))
+	, m_mod_edit_xfloor(0)
+	, m_mod_edit_yfloor(0)
+	, m_mod_edit_thetafloor(0)
+	, m_mod_edit_xceil(0)
+	, m_mod_edit_yceil(0)
+	, m_mod_edit_thetaceil(0)
 {
 
 }
@@ -132,6 +145,12 @@ void CmodbusDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_TYPE, m_mod_type);
 	DDX_Control(pDX, IDC_MOD_BTN_CHANGE, m_mod_btn_change);
 	DDX_Control(pDX, IDC_MOD_BTN_OPMOD, m_mod_btn_opmod);
+	DDX_Text(pDX, IDC_EDIT_XFLOOR, m_mod_edit_xfloor);
+	DDX_Text(pDX, IDC_EDIT_YFLOOR, m_mod_edit_yfloor);
+	DDX_Text(pDX, IDC_EDIT_THETAFLOOR, m_mod_edit_thetafloor);
+	DDX_Text(pDX, IDC_EDIT_XCEILING, m_mod_edit_xceil);
+	DDX_Text(pDX, IDC_EDIT_YCEILING, m_mod_edit_yceil);
+	DDX_Text(pDX, IDC_EDIT_THETACEILING, m_mod_edit_thetaceil);
 }
 
 
@@ -1313,7 +1332,7 @@ void CmodbusDlg::OnTimer(UINT_PTR nIDEvent)
 
 			//背板到达，识别程序开始执行，标志位变成true.这里可以直接替换为等待IdentifyDone完成，直接执行发送数据
 			//的命令，进入判断之后立刻把标志位打为false，防止多次重复发送
-			if (ArriveFlag == true && ExecuteIdentify == true)
+			if (ArriveFlag == true)
 			{
 				//CPublic::ExecuteIdentify = false;
 			
@@ -1509,6 +1528,12 @@ void CmodbusDlg::OnBnClickedModBtnChange()
 	UpdateData(TRUE);
 	backboard = m_mod_type;
 	SprayBatch = 0;
+	x_floor = m_mod_edit_xfloor;
+	x_ceil = m_mod_edit_xceil;
+	y_floor = m_mod_edit_yfloor;
+	y_ceil = m_mod_edit_yceil;
+	theta_floor = m_mod_edit_thetafloor;
+    theta_ceil = m_mod_edit_thetaceil;
 
 }
 

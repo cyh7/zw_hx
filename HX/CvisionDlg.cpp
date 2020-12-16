@@ -479,6 +479,14 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						CTime curTime = CTime().GetCurrentTime();//当前时间
 						LastTime = curTime.Format("%Y-%m-%d %H:%M:%S");
 						//LastTime = preTime.Format("%Y-%m-%d %H:%M:%S");
+						if ((vs_x >= x_floor && vs_x <= x_ceil) && (vs_y >= x_floor && vs_y <= y_ceil) && (vs_theta >= theta_floor && vs_theta <= theta_ceil))
+						{
+							data_good = _T("良品");
+						}
+						else
+						{
+							data_good = _T("非良品");
+						}
 
 						//if (SprayBatch > 0)
 						//{
@@ -644,4 +652,8 @@ BOOL CvisionDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 
 
 // 状态判断
+
+
+
+
 

@@ -219,6 +219,8 @@ BOOL CMonitorDlg::OnInitDialog()
 		struWndpl.rcNormalPosition = rectFullScreen;
 		SetWindowPlacement(&struWndpl);
 	}
+	
+	SetTimer(1, 1000, NULL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -362,27 +364,27 @@ void CMonitorDlg::OnTimer(UINT_PTR nIDEvent)
 			//backboard背板型号
 			m_mon_edit_type = backboard;
 			//
-			/*
-			m_mon_edit_x = ;
-			m_mon_edit_y = ;
-			m_mon_edit_theta = ;
-			*/
+			
+			m_mon_edit_x = vs_x;
+			m_mon_edit_y = vs_y;
+			m_mon_edit_theta = vs_theta;
+			
 			//PLC状态  胶机状态  急停 同步到控件里
 			if (SprayFlag == true)
 			{
-				m_mon_pic_glue.SetIcon(m_hIconRed);
+				m_mon_pic_glue.SetIcon(m_hIconBlue);
 			}
 			else if (SprayFlag == false)
 			{
-				m_mon_pic_glue.SetIcon(m_hIconBlue);
+				m_mon_pic_glue.SetIcon(m_hIconRed);
 			}
 			if (PlcFlag == true)
 			{
-				m_mon_pic_plc.SetIcon(m_hIconRed);
+				m_mon_pic_plc.SetIcon(m_hIconBlue);
 			}
 			else if (PlcFlag == false)
 			{
-				m_mon_pic_plc.SetIcon(m_hIconBlue);
+				m_mon_pic_plc.SetIcon(m_hIconRed);
 			}
 			if (StopFlag == true)
 			{

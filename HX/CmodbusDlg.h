@@ -29,12 +29,19 @@ extern long m_Status_T2;
 
 //判断背板是否到达
 extern bool ArriveFlag;
-//是否执行
-extern bool ExecuteIdentify;
+//设置界面
 //背板型号
 extern CString backboard;
-
-//是否在喷胶
+//X上下限 Y上下限 THETA上下限
+extern double x_floor;
+extern double x_ceil;
+extern double y_floor;
+extern double y_ceil;
+extern double theta_floor;
+extern double theta_ceil;
+//良品
+extern CString data_good;
+//胶机状态 false没有停机 true停机
 extern bool SprayFlag;
 //喷涂批次
 extern DWORD SprayBatch;
@@ -47,6 +54,8 @@ extern bool DisconnectFlag;
 extern int DisconnectNum;
 //防止识别完成后重复插入，识别完置0；插入完成置1
 extern int insertdata;
+
+
 // CmodbusDlg 对话框
 
 class CmodbusDlg : public CDialogEx , public has_slots<>//About CSerialPort
@@ -132,4 +141,12 @@ public:
 	afx_msg void OnBnClickedModBtnOpmon();
 	CMyButton m_mod_btn_opmod;
 	void JudgeStatus();
+	// x下限
+	double m_mod_edit_xfloor;
+	// y下限
+	double m_mod_edit_yfloor;
+	double m_mod_edit_thetafloor;
+	double m_mod_edit_xceil;
+	double m_mod_edit_yceil;
+	double m_mod_edit_thetaceil;
 };

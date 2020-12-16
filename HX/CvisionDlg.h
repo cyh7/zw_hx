@@ -54,4 +54,5 @@ public:
 	CMyButton m_vs_btn_opvs;
 
 
+
 };
