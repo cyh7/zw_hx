@@ -68,7 +68,7 @@ BOOL CdataDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	pDatadlg = this;
 	// TODO:  在此添加额外的初始化
-	m_dat_list.InsertColumn(0, TEXT("日期"), 0, 300);
+	m_dat_list.InsertColumn(0, TEXT("日期"), 0, 120);
 	m_dat_list.InsertColumn(1, TEXT("背板型号"), 0, 120);
 	m_dat_list.InsertColumn(2, TEXT("喷涂批次"), 0, 120);
 	m_dat_list.InsertColumn(3, TEXT("X坐标"), 0, 100);
@@ -79,18 +79,9 @@ BOOL CdataDlg::OnInitDialog()
 	m_dat_list.InsertColumn(8, TEXT("胶机状态"), 0, 120);
 	m_dat_list.InsertColumn(9, TEXT("急停"), 0, 120);
 
-	if (!ConnectDB())
-	{
-		AfxMessageBox(TEXT("连接数据库失败"));
-		return FALSE;
-	}
+	
 
-	//查询数据
-	SelectDB();
-	//获取数据;
-	GetDataFromDB();
-	//显示数据
-	ShowInfo();
+	
 	//按钮绘制
 	{
 		GetDlgItem(IDC_DAT_BTN_QUERY)->ModifyStyle(0, BS_OWNERDRAW, 0);
@@ -248,6 +239,19 @@ BOOL CdataDlg::OnInitDialog()
 		SetWindowPlacement(&struWndpl);
 	}
 
+	if (!ConnectDB())
+	{
+		AfxMessageBox(TEXT("连接数据库失败"));
+		return FALSE;
+	}
+
+	//查询数据
+	SelectDB();
+	//获取数据;
+	GetDataFromDB();
+	//显示数据
+	ShowInfo();
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -312,7 +316,7 @@ BOOL CdataDlg::ConnectDB()
 {
 	// TODO: 在此处添加实现代码.
 	mysql_init(&m_sqlCon);
-	//mysqlCon 数据库结构 localhost 主机名 root 用户名 "" 密码为空 mytest 数据库 3306 端口
+	//mysqlCon 数据库结构 localhost 主机名 root 用户名 "" 密码为空   test 数据库 3306 端口
 	mysql_options(&m_sqlCon, MYSQL_SET_CHARSET_NAME, "gbk");
 	if (!mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0))
 		return FALSE;

@@ -347,6 +347,8 @@ void CHXDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		CAboutDlg dlgAbout;
 		dlgAbout.DoModal();
 	}
+	else if (nID == SC_MOVE || nID == 0xF012)
+		return;
 	else
 	{
 		CDialogEx::OnSysCommand(nID, lParam);
