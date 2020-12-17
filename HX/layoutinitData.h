@@ -25,6 +25,9 @@ void InitLayoutData(CLayout& layout, CWnd* parent)
 	layout.RegisterControl(IDC_DAT_BTN_OPCAD, CLayout::e_stretch_all);
 	layout.RegisterControl(IDC_DAT_BTN_OPMOD, CLayout::e_stretch_all);
 	layout.RegisterControl(IDC_DAT_BTN_OPDAT, CLayout::e_stretch_all);
+
+	layout.RegisterControl(IDC_DAT_STATIC1, CLayout::e_stretch_all);
+	layout.RegisterControl(IDC_DAT_STATIC2, CLayout::e_stretch_all);
 }
 
 #endif

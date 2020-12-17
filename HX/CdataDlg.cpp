@@ -198,6 +198,8 @@ BOOL CdataDlg::OnInitDialog()
 	GetDlgItem(IDC_DATETIMEPICKER2)->SetFont(p_font, false);
 	GetDlgItem(IDC_DATETIMEPICKER3)->SetFont(p_font, false);
 	GetDlgItem(IDC_DATETIMEPICKER4)->SetFont(p_font, false);
+	GetDlgItem(IDC_DAT_STATIC1)->SetFont(p_font, false);
+	GetDlgItem(IDC_DAT_STATIC2)->SetFont(p_font, false);
 	m_Brush.CreateSolidBrush(RGB(240, 240, 220));
 	InitLayoutData(m_layoutData, this);
 

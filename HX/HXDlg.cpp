@@ -71,6 +71,7 @@ void CHXDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_HX_BTN_MODBUS, m_hx_btn_modbus);
 	DDX_Control(pDX, IDC_HX_BTN_MONITOR, m_hx_btn_monitor);
 	DDX_Control(pDX, IDC_HX_BTN_DATA, m_hx_btn_data);
+	DDX_Control(pDX, IDC_HX_PIC_MAIN, m_hx_pic_main);
 }
 
 BEGIN_MESSAGE_MAP(CHXDlg, CDialogEx)
@@ -335,7 +336,8 @@ BOOL CHXDlg::OnInitDialog()
 	GetDlgItem(IDC_HX_STATIC_GDUT)->SetFont(p_word, false);
 	GetDlgItem(IDC_HX_STATIC_GDUT2)->SetFont(p_word, false);
 	//InitLayout(m_layout, this);
-
+	m_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 800, 500, LR_DEFAULTCOLOR);
+	m_hx_pic_main.SetBitmap(m_hBitmapMain);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }

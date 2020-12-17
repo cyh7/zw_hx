@@ -28,6 +28,7 @@
 #define IDI_GRAY                        160
 #define IDI_HIGHBLUE                    161
 #define IDB_BITMAP1                     162
+#define IDB_BITMAP2                     163
 #define IDC_TAB1                        1000
 #define IDC_COMBO1                      1001
 #define IDC_COMBO2                      1002
@@ -163,6 +164,9 @@
 #define IDC_VS_STATIC_NAME              1096
 #define IDC_MON_STATIC_NAME             1097
 #define IDC_MOD_STATIC_NAME             1098
+#define IDC_DAT_STATIC2                 1099
+#define IDC_DAT_STATIC1                 1101
+#define IDC_HX_PIC_MAIN                 1102
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -185,9 +189,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        163
+#define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         32794
-#define _APS_NEXT_CONTROL_VALUE         1099
+#define _APS_NEXT_CONTROL_VALUE         1103
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

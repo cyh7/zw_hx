@@ -159,6 +159,7 @@ BOOL CMonitorDlg::OnInitDialog()
 		GetDlgItem(IDC_MON_STATIC_TYPE)->SetFont(p_font, false);
 		GetDlgItem(IDC_MON_STATIC_BATCH)->SetFont(p_font, false);
 		GetDlgItem(IDC_MON_STATIC_COORD)->SetFont(p_font, false);
+	
 		GetDlgItem(IDC_MON_STATIC_X)->SetFont(p_font, false);
 		GetDlgItem(IDC_MON_STATIC_Y)->SetFont(p_font, false);
 		GetDlgItem(IDC_MON_STATIC_THETA)->SetFont(p_font, false);
@@ -390,7 +391,7 @@ void CMonitorDlg::OnTimer(UINT_PTR nIDEvent)
 			{
 				m_mon_pic_stop.SetIcon(m_hIconRed);
 			}
-			else if (PlcFlag == false)
+			else if (StopFlag == false)
 			{
 				m_mon_pic_stop.SetIcon(m_hIconBlue);
 			}

@@ -155,6 +155,24 @@ BOOL CvisionDlg::OnInitDialog()
 		_T("楷体"));       // lpszFac，字体
 	GetDlgItem(IDC_VS_STATIC_NAME)->SetFont(p_name, false);
 	
+	CFont* p_font = new CFont;
+	p_font->CreateFont(18,      // nHeight，文字大小
+		0,          // nWidth
+		0,          // nEscapement
+		0,          // nOrientation
+		FW_BOLD,    // nWeight，加粗
+		FALSE,      // bItalic
+		FALSE,      // bUnderline
+		0,          // cStrikeOut
+		ANSI_CHARSET,               // nCharSet
+		OUT_DEFAULT_PRECIS,         // nOutPrecision
+		CLIP_DEFAULT_PRECIS,        // nClipPrecision
+		DEFAULT_QUALITY,            // nQuality
+		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
+		_T("微软雅黑"));       // lpszFac，字体
+
+	
+
 	InitLayoutVision(m_layoutVision, this);
 	m_Brush.CreateSolidBrush(RGB(240, 240, 220));
 	//全屏幕操作

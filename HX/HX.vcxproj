@@ -284,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\2.bmp" />
+    <Image Include="res\4.bmp" />
     <Image Include="res\blue2.ico" />
     <Image Include="res\cad.ico" />
     <Image Include="res\gdut.ico" />

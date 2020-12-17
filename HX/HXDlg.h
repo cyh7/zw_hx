@@ -82,4 +82,6 @@ public:
 	afx_msg void OnMenuExit();
 	void ShowMonitor();
 	afx_msg void OnBnClickedHxBtnMonitor();
+	CStatic m_hx_pic_main;
+	HBITMAP m_hBitmapMain;
 };
