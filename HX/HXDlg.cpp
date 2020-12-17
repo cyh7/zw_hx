@@ -1,7 +1,7 @@
 ﻿
 // HXDlg.cpp: 实现文件
 //陈一航是个人上人
-
+//老8是吴卓承
 #include "pch.h"
 #include "framework.h"
 #include "HX.h"
