@@ -40,6 +40,7 @@ void CMonitorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_MON_EDIT_Y, m_mon_edit_y);
 	DDX_Text(pDX, IDC_MON_EDIT_THETA, m_mon_edit_theta);
 	DDX_Control(pDX, IDC_MON_BTN_OPMON, m_mon_btn_opmon);
+	DDX_Control(pDX, IDC_MON_PIC_MAIN, m_mon_pic_main);
 }
 
 
@@ -221,6 +222,8 @@ BOOL CMonitorDlg::OnInitDialog()
 		SetWindowPlacement(&struWndpl);
 	}
 	
+	
+
 	SetTimer(1, 1000, NULL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -360,6 +363,9 @@ void CMonitorDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		case 1:
 		{
+			//更换图片
+			m_mon_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 800, 500, LR_DEFAULTCOLOR);
+			m_mon_pic_main.SetBitmap(m_mon_hBitmapMain);
 			//SprayBatch喷涂批次
 			m_mon_edit_batch = SprayBatch;
 			//backboard背板型号

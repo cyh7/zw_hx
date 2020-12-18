@@ -54,4 +54,7 @@ public:
 	DOUBLE m_mon_edit_y;
 	DOUBLE m_mon_edit_theta;
 	CMyButton m_mon_btn_opmon;
+
+	HBITMAP m_mon_hBitmapMain;
+	CStatic m_mon_pic_main;
 };
