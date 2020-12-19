@@ -364,7 +364,7 @@ void CMonitorDlg::OnTimer(UINT_PTR nIDEvent)
 		case 1:
 		{
 			//更换图片
-			m_mon_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 800, 500, LR_DEFAULTCOLOR);
+			m_mon_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 700, 500, LR_DEFAULTCOLOR);
 			m_mon_pic_main.SetBitmap(m_mon_hBitmapMain);
 			//SprayBatch喷涂批次
 			m_mon_edit_batch = SprayBatch;

@@ -340,7 +340,7 @@ BOOL CHXDlg::OnInitDialog()
 	GetDlgItem(IDC_HX_STATIC_GDUT)->SetFont(p_word, false);
 	GetDlgItem(IDC_HX_STATIC_GDUT2)->SetFont(p_word, false);
 	//InitLayout(m_layout, this);
-	m_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 800, 500, LR_DEFAULTCOLOR);
+	m_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 600, 500, LR_DEFAULTCOLOR);
 	m_hx_pic_main.SetBitmap(m_hBitmapMain);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
