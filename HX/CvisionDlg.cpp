@@ -410,11 +410,11 @@ BOOL CvisionDlg::PreTranslateMessage(MSG* pMsg)
 		{
 			OnBnClickedVisBtnOpmod();
 		}
-		if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
-			return TRUE;
-		if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
-			return TRUE;
 	}
+	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
+		return TRUE;
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
+		return TRUE;
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
@@ -461,6 +461,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 			//没有断线 通信没断线才能执行下边的程序
 			else
 			{
+				DisconnectFlag = false;
 				m_Status_T2 = 0;//如果没有断线 那么在onReceive里会更改这个值，如果断线了那就不会更改了
 				//只能对上一个时间循环里的数据进行判断
 				if (ArriveFlag == true)
@@ -493,9 +494,8 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						//程序识别完之后，直接开始settimer
 						SetTimer(2,30,Null);
 						*/
-
-						CTime curTime = CTime().GetCurrentTime();//当前时间
-						LastTime = curTime.Format("%Y-%m-%d %H:%M:%S");
+						IdentifyDone = true;
+						//CTime curTime = CTime().GetCurrentTime();//当前时间
 						//LastTime = preTime.Format("%Y-%m-%d %H:%M:%S");
 						if ((vs_x >= x_floor && vs_x <= x_ceil) && (vs_y >= x_floor && vs_y <= y_ceil) && (vs_theta >= theta_floor && vs_theta <= theta_ceil))
 						{
@@ -529,7 +529,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						insertdata = 0;
 						SprayBatch += 1;
 						//执行视觉识别程序 产生三个坐标，
-
+						SetTimer(2, 50, NULL);
 						//执行发送函数  这里的发送函数应该是启动定时器2
 					}
 				}
@@ -549,6 +549,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 				if (LocVisionNum < 3)
 				{
 					//SendData;
+					//SendData(1, LocVisionNum + 90, testLoc[LocVisionNum]);
 					LocVisionNum++;
 				}
 				//发送完毕
@@ -556,11 +557,12 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 				{
 					//SendData 这个跟轩举商量
 					//发送完毕 发送数清0
-					LocVisionNum = 0;
 					KillTimer(2);
+					LocVisionNum = 0;
+					m_Vision_T2 = GetTickCount();//这里加一个计时是防止下一组背板错误判断
 					//SprayBatch += 1; //喷涂批次加一
 					//重启定时器1
-					//SetTimer(1)
+					SetTimer(1, 200, NULL);
 				}
 
 			}
@@ -575,7 +577,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 					//寄存器地址  发送的数据根据LocVisionNum来定
 
 					//SendData(1, , );
-
+					//SendData(1, LocVisionNum + 90, testLoc[LocVisionNum]);
 					//发送完之后做加一处理
 					LocVisionNum++;
 				}

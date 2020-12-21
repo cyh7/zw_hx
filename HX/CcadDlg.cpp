@@ -723,29 +723,30 @@ void CcadDlg::OnBnClickedButtonCadSend()
 BOOL CcadDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此处添加实现代码.
-	if (pMsg->wParam == VK_F1)
-	{
-		OnBnClickedCadBtnOpmon();
-	}
-	if (pMsg->wParam == VK_F2)
-	{
-		OnBnClickedCadBtnOpvs();
-	}
-	if (pMsg->wParam == VK_F4)
-	{
-		OnBnClickedCadBtnOpdata();
-	}
-	if (pMsg->wParam == VK_F5)
-	{
-		OnBnClickedCadBtnOpmod();
-	}
+	
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
-			return TRUE;
-		if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
-			return TRUE;
+		if (pMsg->wParam == VK_F1)
+		{
+			OnBnClickedCadBtnOpmon();
+		}
+		if (pMsg->wParam == VK_F2)
+		{
+			OnBnClickedCadBtnOpvs();
+		}
+		if (pMsg->wParam == VK_F4)
+		{
+			OnBnClickedCadBtnOpdata();
+		}
+		if (pMsg->wParam == VK_F5)
+		{
+			OnBnClickedCadBtnOpmod();
+		}
 	}
+	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
+		return TRUE;
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
+		return TRUE;
 	return CDialogEx::PreTranslateMessage(pMsg);  //别忘了这句 ,CXXXDlg类的基类是CDialogEx,如果是CDialog则返回CDialog
 }
 

@@ -79,7 +79,7 @@ bool GoodFlag = true;
 //PLC正常
 bool PlcFlag = true;
 //通信状态
-bool DisconnectFlag = false;
+bool DisconnectFlag = true;
 //急停标志位
 bool StopFlag = false;
 
@@ -1036,6 +1036,9 @@ void CmodbusDlg::OnReceive()
 			m_EditReceiveCtrl.SetSel(-1, -1);*/
 		}
 
+		CTime curTime;//当前时间
+		curTime = CTime::GetCurrentTime();
+		CString testLastTime = curTime.Format("%Y-%m-%d %H:%M:%S");
 		//把收到的数据显示出来
 		/*CString RecStr((char *)str);
 		m_EditReceiveCtrl.SetSel(-1, -1);
@@ -1464,30 +1467,32 @@ void CmodbusDlg::OnPaint()
 BOOL CmodbusDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此处添加实现代码.
-	if (pMsg->wParam == VK_F1)
-	{
-		OnBnClickedModBtnOpmon();
-	}
-	if (pMsg->wParam == VK_F2)
-	{
-		OnBnClickedModBtnOpvs();
-	}
-	if (pMsg->wParam == VK_F4)
-	{
-		OnBnClickedModBtnOpdata();
-		return true;
-	}
+	
 	if (pMsg->wParam == VK_F3)
 	{
 		OnBnClickedModBtnOpcad();
 	}
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
-			return TRUE;
-		if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
-			return TRUE;
+		if (pMsg->wParam == VK_F1)
+		{
+			OnBnClickedModBtnOpmon();
+		}
+		if (pMsg->wParam == VK_F2)
+		{
+			OnBnClickedModBtnOpvs();
+		}
+		if (pMsg->wParam == VK_F4)
+		{
+			OnBnClickedModBtnOpdata();
+			return true;
+		}
 	}
+	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
+		return TRUE;
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
+		return TRUE;
+
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 

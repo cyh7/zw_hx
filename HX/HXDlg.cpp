@@ -478,12 +478,12 @@ BOOL CHXDlg::PreTranslateMessage(MSG* pMsg)
 	{
 		if (::TranslateAccelerator(GetSafeHwnd(), hAccel, pMsg))
 			return TRUE;
-		if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
-			return TRUE;
-		if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
-			return TRUE;
 	}
-
+	
+	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
+		return TRUE;
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
+		return TRUE;
 
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

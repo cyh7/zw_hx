@@ -552,23 +552,25 @@ BOOL CdataDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 BOOL CdataDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-	if (pMsg->wParam == VK_F1)
+	if (pMsg->message == WM_KEYDOWN)
 	{
-		OnBnClickedDatBtnOpmon();
+		if (pMsg->wParam == VK_F1)
+		{
+			OnBnClickedDatBtnOpmon();
+		}
+		if (pMsg->wParam == VK_F2)
+		{
+			OnBnClickedDatBtnOpvs();
+		}
+		if (pMsg->wParam == VK_F3)
+		{
+			OnBnClickedDatBtnOpcad();
+		}
+		if (pMsg->wParam == VK_F5)
+		{
+			OnBnClickedDatBtnOpmod();
+		}
 	}
-	if (pMsg->wParam == VK_F2)
-	{
-		OnBnClickedDatBtnOpvs();
-	}
-	if (pMsg->wParam == VK_F3)
-	{
-		OnBnClickedDatBtnOpcad();
-	}
-	if (pMsg->wParam == VK_F5)
-	{
-		OnBnClickedDatBtnOpmod();
-	}
-
 	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
 		return TRUE;
 	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4

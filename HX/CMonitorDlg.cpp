@@ -290,22 +290,26 @@ void CMonitorDlg::OnSize(UINT nType, int cx, int cy)
 BOOL CMonitorDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-	if (pMsg->wParam == VK_F4)
+	if (pMsg->message == WM_KEYDOWN)
 	{
-		OnBnClickedMonBtnOpdata();
+		if (pMsg->wParam == VK_F4)
+		{
+			OnBnClickedMonBtnOpdata();
+		}
+		if (pMsg->wParam == VK_F2)
+		{
+			OnBnClickedMonBtnOpvs();
+		}
+		if (pMsg->wParam == VK_F3)
+		{
+			OnBnClickedMonBtnOpcad();
+		}
+		if (pMsg->wParam == VK_F5)
+		{
+			OnBnClickedMonBtnOpmod();
+		}
 	}
-	if (pMsg->wParam == VK_F2)
-	{
-		OnBnClickedMonBtnOpvs();
-	}
-	if (pMsg->wParam == VK_F3)
-	{
-		OnBnClickedMonBtnOpcad();
-	}
-	if (pMsg->wParam == VK_F5)
-	{
-		OnBnClickedMonBtnOpmod();
-	}
+	
 	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
 		return TRUE;
 	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
