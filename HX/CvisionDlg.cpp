@@ -561,6 +561,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 					//SendData 这个跟轩举商量
 					//发送完毕 发送数清0
 					KillTimer(2);
+					SendData(1, 93, 1);
 					LocVisionNum = 0;
 					m_Vision_T2 = GetTickCount();//这里加一个计时是防止下一组背板错误判断
 					//SprayBatch += 1; //喷涂批次加一
@@ -572,7 +573,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 			else
 			{
 				BadVisionNum++;
-				if (BadVisionNum < 3)
+				if (BadVisionNum < 4)
 				{
 					//第一个数据出现错误与后边的数据出现错误是一样的处理措施
 					//先减1发送前一个数据

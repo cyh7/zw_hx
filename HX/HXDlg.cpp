@@ -99,6 +99,7 @@ BEGIN_MESSAGE_MAP(CHXDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_LOGIN, &CHXDlg::OnMenuLogin)
 	ON_COMMAND(ID_MENU_EXIT, &CHXDlg::OnMenuExit)
 	ON_BN_CLICKED(IDC_HX_BTN_MONITOR, &CHXDlg::OnBnClickedHxBtnMonitor)
+	ON_COMMAND(ID_32772, &CHXDlg::OnAbout)
 END_MESSAGE_MAP()
 
 
@@ -814,3 +815,11 @@ void CHXDlg::OnMenuExit()
 
 
 
+
+
+void CHXDlg::OnAbout()
+{
+	// TODO: 在此添加命令处理程序代码
+	CAboutDlg dlgAbout;
+	dlgAbout.DoModal();
+}

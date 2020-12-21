@@ -655,7 +655,7 @@ void CcadDlg::OnTimer(UINT_PTR nIDEvent)
 			{
 				//进入错误阶段，首先错误数累加，每个数据有两次重发机会，
 				BadCadNum++;
-				if (BadCadNum < 3)
+				if (BadCadNum < 4)
 				{
 					//第一个数据出现错误与后边的数据出现错误是一样的处理措施
 					//先减1发送前一个数据

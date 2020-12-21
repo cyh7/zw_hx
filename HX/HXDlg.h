@@ -84,4 +84,5 @@ public:
 	afx_msg void OnBnClickedHxBtnMonitor();
 	CStatic m_hx_pic_main;
 	HBITMAP m_hBitmapMain;
+	afx_msg void OnAbout();
 };

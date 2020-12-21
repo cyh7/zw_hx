@@ -703,10 +703,19 @@ BOOL CdataDlg::InsertDB(CString time, CString type, DWORD batch, double x, doubl
 	::wsprintfA(temp, "%ls", (LPCTSTR)cquery);
 	query = temp;
 
-	if (mysql_query(&m_sqlCon, query))
+	/*if (mysql_query(&m_sqlCon, query))
 	{
 		MessageBox(TEXT("插入数据失败！"));
 		return FALSE;
+	}*/
+
+	try
+	{
+		mysql_query(&m_sqlCon, query);
+	}
+	catch (_com_error)
+	{
+		IsConnOpen = false;
 	}
 	return TRUE;
 }
