@@ -133,12 +133,10 @@ void CLoginDlg::OnBnClickedButtonSetpwd()
 BOOL CLoginDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 在此处添加实现代码.
-	if (pMsg->message == WM_KEYDOWN)
-	{
-		if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
-			return TRUE;
-		if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
-			return TRUE;
-	}
+	
+	if (pMsg->wParam == VK_ESCAPE || pMsg->wParam == VK_RETURN)    //屏蔽回车和ESC  
+		return TRUE;
+	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
+		return TRUE;
 	return CDialogEx::PreTranslateMessage(pMsg);
 }

@@ -99,8 +99,8 @@ public:
 	CMyButton m_OpenCloseCtrl;
 	void SendData(int CommTypeIn, WORD DownAdd, DWORD DownData);
 	afx_msg void OnBnClickedButton1();
-	void ReadArrive();
-	void SendGlueData();
+	
+	
 	
 private:
 	/*CListCtrl m_GlueList;

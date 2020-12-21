@@ -1006,7 +1006,7 @@ void CmodbusDlg::OnReceive()
 			if (SendFreqData[6] == RecCrcData[6] && SendFreqData[7] == RecCrcData[7])
 			{
 				RecMsgFlag = true;
-				RecStr = "GOOD";
+			
 				//m_CadT2 = GetTickCount();
 	
 				//CString msg;
@@ -1152,175 +1152,10 @@ void CmodbusDlg::SendData(int CommTypeIn, WORD DownAdd, DWORD DownData)
 void CmodbusDlg::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	//CPublic::Port = portName;
-	//ReadArrive();  
-	//m_mod_type = _T("a");
-	SetTimer(1, 200, NULL);
-	//if (CPublic::test1 == false)
-	//{
-	//	//CString msg;
-	//	////%02X为16进制显示  %d十进制 %s 字符串
-	//	//msg.Format(_T("%d"), CPublic::test1);
-	//	//MessageBox(msg);
-
-	//	SendData(1, 100, 100);
-	//}
-	UpdateData(FALSE);
 	
-
-	//SendGlueData();
-	//T1 = GetTickCount();//程序段开始前取得系统运行时间(ms) 
-	//SendData(1, 103, 100);
-	/*SendData(1, 100, 100);
-	Sleep(35);
-	SendData(1, 101, 100);*/
+	SetTimer(1, 200, NULL);
+	
 }
-
-//
-void CmodbusDlg::ReadArrive()
-{
-	// TODO: 在此处添加实现代码.
-	SendData(0, 95, 1);
-}
-
-
-
-void CmodbusDlg::SendGlueData()
-{
-	// TODO: 在此处添加实现代码.
-	//WORD temp[200];//发送数据存储空间
-	//int i = 0;//把一行数据读到寄存器时用到的
-	//CString w[1024];
-	//CString str;//用于接收分割字符的临时变量
-
-
-	//CString strline;//定义一个变量用于接收读取的一行内容
-	//CStdioFile file;//定义一个CStdioFile类的对象 file
-	////GlueX1 = _wtoi(GlueAdd); CString转word
-	//std::vector<CString> vecResult;
-	//std::vector<CString> strTmp;
-	////清除元素，并收回内存 std::vector <CString>().swap(strTmp);
-	////vecResult.clear()清除元素但不收回空间
-	//BOOL flag = file.Open(_T(".\\path.txt"), CFile::modeRead);//open函数需要传两个参数，前一个是文件路径，后一个是文件的打开模式
-	//if (flag == FALSE)
-	//{
-	//	//MessageBox(_T("文件打开失败"));
-	//}
-	//while (file.ReadString(strline))
-	//{
-	//	vecResult.push_back(strline);
-	//}
-	//file.Close();
-	//for (std::vector<CString>::iterator it = vecResult.begin(); it != vecResult.end(); it++)
-	//{
-	//	w[i] = vecResult[i];
-	//	i = i + 1;
-	//}
-	////分割字符部分//
-
-	//for (int j = 0; j < i; j++)
-	//{
-	//	int curPos = 0;
-	//	str = w[j].Tokenize(_T(" "), curPos);
-	//	while (str.Trim() != _T(""))
-	//	{
-	//		//输入寄存器里的喷胶数据5个一轮 0-4为第一组，但是注意多出来的空的为00
-	//		strTmp.push_back(str);
-	//		str = w[j].Tokenize(_T(" "), curPos);
-	//	}
-	//}
-	////把容器的
-	//vecGlueNum = strTmp.size();
-	////第一列的值
-	//for (int j = 0, a = 0; j < (strTmp.size() / 5) + 1; j++)
-	//{
-	//	CString name;
-	//	name.Format(_T("第%d条"), j + 1);
-	//	m_GlueList.InsertItem(j, name);
-	//	
-	//	m_GlueList.SetItemText(j, 1, strTmp[a]);
-	//	m_GlueList.SetItemText(j, 2, strTmp[a + 1]);
-	//	m_GlueList.SetItemText(j, 3, strTmp[a + 2]);
-	//	m_GlueList.SetItemText(j, 4, strTmp[a + 3]);
-	//	m_GlueList.SetItemText(j, 5, strTmp[a + 4]);
-	//	a = j * 5;
-	//}
-
-	////通过容器的容量size即当前容器里边的数据多少
-	//for (int j = 0; j < strTmp.size(); j++)
-	//{
-
-	//	//把负的数据处理变成范围内的数据
-	//	if (strTmp[j].GetAt(0) == '-')
-	//	{
-	//		strTmp[j].Remove('-');
-	//		temp[j] = _wtoi(strTmp[j]);
-	//		temp[j] = temp[j] + 32767;
-	//	}
-	//	else
-	//		temp[j] = _wtoi(strTmp[j]);
-
-	//	GlueTemp[j] = temp[j];
-	//	//CString msg;
-	//	////%02X为16进制显示  %d十进制 %s 字符串
-	//	//msg.Format(_T("%02X"), temp[j]);
-	//	//MessageBox(msg);
-	//}
-	//
-	//SetTimer(2, 50, NULL);
-	//发送
-	//for (int j = 0; j < strTmp.size(); j++)
-	//{
-	//	SendData(1, j + 100, temp[j]);
-
-	//	Sleep(50);//极限了
-
-	//	
-	//	/*SendData(1, j+101, temp[j+1]);
-	//	Sleep(1000);
-	//	SendData(1, j+102, temp[j+2]);
-	//	Sleep(1000);
-	//	SendData(1, j+103, temp[j+3]);
-	//	Sleep(1000);
-	//	SendData(1, j+104, temp[j+4]);
-	//	Sleep(1000);*/
-	//	发送的胶条数量加1
-	//	没收到或者收到超时
-	//	if(OverTime == true)
-
-	//	if (OverTime == true || RecMsgFlag == false)
-	//	{
-	//		int n = 0;
-	//		//while ((OverTime == true || RecMsgFlag == false) && (BadNum <= 3 || n < 3))
-	//		while(OverTime == true)
-	//		{
-	//			SendData(1, j + 100, temp[j]);
-	//			Sleep(35);
-	//			BadNum = BadNum + 1;
-
-	//			//CString msg;
-	//			////%02X为16进制显示  %d十进制 %s 字符串
-	//			//msg.Format(_T("重发第%d次"), BadNum);
-	//			//MessageBox(msg);
-
-	//			if (BadNum >= 3)
-	//			{
-	//				break;
-	//			}
-	//		}
-
-	//	}
-	//	if (BadNum >= 3)
-	//	{
-	//		break;
-	//	}
-
-	//	SendGlueNum++;
-	//}
-}
-
-
-
 
 
 void CmodbusDlg::OnTimer(UINT_PTR nIDEvent)
@@ -1334,77 +1169,12 @@ void CmodbusDlg::OnTimer(UINT_PTR nIDEvent)
 		case 1:
 		{
 			SendOnce = true;
-			ReadArrive();
+			SendData(0, 95, 1);
 
-			//背板到达，识别程序开始执行，标志位变成true.这里可以直接替换为等待IdentifyDone完成，直接执行发送数据
-			//的命令，进入判断之后立刻把标志位打为false，防止多次重复发送
-			if (ArriveFlag == true)
-			{
-				//CPublic::ExecuteIdentify = false;
-			
-				//识别程序启动
-					//if(done)
-						//sendlocation
-				//MessageBox(_T("6"));
 
-			}
 			break;
 		}
-		//case 2:
-		//{
-		//	//CString msg;
-		//	////%02X为16进制显示  %d十进制 %s 字符串
-		//	//msg.Format(_T("定时器2执行"));
-		//	//MessageBox(msg);
-		//	//判断的是上一组已发送的数据的标志，如果没有超时且上一组数据CRC校验正确的话，那么可以进行本次发送
-		//	T1 = GetTickCount();
-		//	if (T2 != 0 && OverTime == false && RecMsgFlag == true)
-		//	{
-		//		//如果上一个数据发送成功，那么将BadNum置为0
-		//		BadNum = 0;
-		//		if (locGlueNum < vecGlueNum)
-		//		{
 
-		//			SendData(1, locGlueNum + 100, GlueTemp[locGlueNum]);
-		//			locGlueNum++;
-		//		}
-		//		else
-		//		{
-		//			//发送完毕之后，可以考虑每次按下发送键的时候把这个置为0，把定位数据置为0，方便下次发送
-		//			//locGlueNum = 0;
-		//			KillTimer(2);
-		//		}
-		//	}
-		//	//这里是上一组信息发送有误的情况
-		//	else
-		//	{
-		//		//进入错误阶段，首先错误数累加，每个数据有两次重发机会，
-		//		BadNum++;
-		//		if (BadNum < 3)
-		//		{
-		//			//第一个数据出现错误与后边的数据出现错误是一样的处理措施
-		//			//先减1发送前一个数据
-		//			locGlueNum = locGlueNum - 1;
-		//			SendData(1, locGlueNum + 100, GlueTemp[locGlueNum]);
-		//			//发送完之后做加一处理
-		//			locGlueNum++;
-		//		}
-		//		else
-		//		{
-
-		//			//停止发送
-		//			KillTimer(2);
-		//			//报错
-		//			CString msg;
-
-		//			//%02X为16进制显示  %d十进制 %s 字符串
-		//			msg.Format(_T("第%d个数据发送错误，终止发送！"), locGlueNum);
-		//			MessageBox(msg);
-
-		//		}
-		//	}
-		//	break;
-		//}
 	}
 	__super::OnTimer(nIDEvent);
 }

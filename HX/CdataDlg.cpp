@@ -8,7 +8,8 @@
 #include "layoutinitData.h"
 #include "HXDlg.h"
 
-
+bool IsConnOpen = false;
+bool ConnectSucces = false;
 CdataDlg *CdataDlg::pDatadlg = NULL;
 // CdataDlg 对话框
 
@@ -245,19 +246,25 @@ BOOL CdataDlg::OnInitDialog()
 	m_data_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
 	m_data_pic_logo.SetBitmap(m_data_hBitmap_logo);
 
-	if (!ConnectDB())
+	ConnectDB();
+	if (ConnectSucces == true)
 	{
-		AfxMessageBox(TEXT("连接数据库失败"));
-		return FALSE;
+		//查询数据
+		SelectDB();
+		//获取数据;
+		GetDataFromDB();
+		//显示数据
+		ShowInfo();
 	}
 
-	//查询数据
-	SelectDB();
-	//获取数据;
-	GetDataFromDB();
-	//显示数据
-	ShowInfo();
+	////查询数据
+	//SelectDB();
+	////获取数据;
+	//GetDataFromDB();
+	////显示数据
+	//ShowInfo();
 
+	SetTimer(1, 10 * 1000, NULL);//每隔10min判断重连一次数据库
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -312,7 +319,17 @@ void CdataDlg::OnPaint()
 void CdataDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-
+	switch (nIDEvent)
+	{
+	case 1:
+		{
+			if (ConnectSucces == false)
+			{
+				ConnectDB();
+			}
+		}
+		break;
+	}
 	CDialogEx::OnTimer(nIDEvent);
 }
 
@@ -324,8 +341,19 @@ BOOL CdataDlg::ConnectDB()
 	mysql_init(&m_sqlCon);
 	//mysqlCon 数据库结构 localhost 主机名 root 用户名 "" 密码为空   test 数据库 3306 端口
 	mysql_options(&m_sqlCon, MYSQL_SET_CHARSET_NAME, "gbk");
-	if (!mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0))
+
+	/*if (!mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0))
 		return FALSE;
+	return TRUE;*/
+	try
+	{
+		mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0);
+		ConnectSucces = true;
+	}
+	catch (_com_error *e)
+	{
+		ConnectSucces = false;
+	}
 	return TRUE;
 }
 
@@ -346,11 +374,20 @@ BOOL CdataDlg::SelectDB()
 	char temp[100];
 	::wsprintfA(temp, "%ls", (LPCTSTR)cquery);
 	query = temp;
-	//查询数据
-	if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
-		return FALSE;
-	//获取结果集
-	m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
+	
+
+	try
+	{
+		//查询数据
+		mysql_query(&m_sqlCon, query); //执行指定为一个空结尾的字符串的SQL查询。
+		//获取结果集
+		m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
+
+	}
+	catch(_com_error *e)
+	{
+		IsConnOpen = false;
+	}
 	return TRUE;
 }
 
@@ -484,10 +521,19 @@ BOOL CdataDlg::SelectDateDB()
 	::wsprintfA(temp, "%ls", (LPCTSTR)cquery);
 	query = temp;
 	//查询数据
-	if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
-		return FALSE;
-	//获取结果集
-	m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
+	//if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
+	//	return FALSE;
+	////获取结果集
+	//m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
+	try
+	{
+		mysql_query(&m_sqlCon, query);
+		m_dat_res = mysql_store_result(&m_sqlCon);
+	}
+	catch(_com_error *e)
+	{
+		IsConnOpen = false;
+	}
 	return TRUE;
 }
 
@@ -522,12 +568,19 @@ BOOL CdataDlg::DeleteDB()
 	::wsprintfA(temp, "%ls", (LPCTSTR)cquery);
 	query = temp;
 
-	if (mysql_query(&m_sqlCon, query))
+	/*if (mysql_query(&m_sqlCon, query))
 	{
 		AfxMessageBox(TEXT("删除数据失败！"));
 		return FALSE;
+	}*/
+	try
+	{
+		mysql_query(&m_sqlCon, query);
 	}
-
+	catch (_com_error *e)
+	{
+		IsConnOpen = false;
+	}
 
 	return TRUE;
 }

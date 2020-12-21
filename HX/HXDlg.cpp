@@ -623,6 +623,29 @@ void CHXDlg::ShowCad()
 void CHXDlg::ShowModbus()
 {
 	// TODO: 在此处添加实现代码.
+	/*if (LoginFlag == false)
+	{
+		m_Dlg4.ShowWindow(SW_SHOW);
+		m_Dlg1.ShowWindow(SW_HIDE);
+		m_Dlg2.ShowWindow(SW_HIDE);
+		m_Dlg3.ShowWindow(SW_HIDE);
+		m_Dlg5.ShowWindow(SW_HIDE);
+		CString title;
+		title = _T("喷胶主监控");
+		this->SetWindowText(title);
+		MessageBox(_T("请登录管理员账户"));
+	}
+	else
+	{
+		m_Dlg3.ShowWindow(SW_SHOW);
+		m_Dlg1.ShowWindow(SW_HIDE);
+		m_Dlg4.ShowWindow(SW_HIDE);
+		m_Dlg2.ShowWindow(SW_HIDE);
+		m_Dlg5.ShowWindow(SW_HIDE);
+		CString title;
+		title = _T("系统设置");
+		this->SetWindowText(title);
+	}*/
 	m_Dlg3.ShowWindow(SW_SHOW);
 	m_Dlg1.ShowWindow(SW_HIDE);
 	m_Dlg4.ShowWindow(SW_HIDE);
@@ -688,6 +711,7 @@ void CHXDlg::OnMenuF2()
 	m_Dlg1.ShowWindow(SW_SHOW);
 	m_Dlg2.ShowWindow(SW_HIDE);
 	m_Dlg3.ShowWindow(SW_HIDE);
+	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg5.ShowWindow(SW_HIDE);
 
 	CString title;
@@ -702,6 +726,7 @@ void CHXDlg::OnMenuF3()
 	m_Dlg2.ShowWindow(SW_SHOW);
 	m_Dlg1.ShowWindow(SW_HIDE);
 	m_Dlg3.ShowWindow(SW_HIDE);
+	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg5.ShowWindow(SW_HIDE);
 	CString title;
 	title = _T("CAD文件读取");
@@ -714,6 +739,7 @@ void CHXDlg::OnMenuF4()
 	// TODO: 在此添加命令处理程序代码
 	m_Dlg5.ShowWindow(SW_SHOW);
 	m_Dlg1.ShowWindow(SW_HIDE);
+	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg2.ShowWindow(SW_HIDE);
 	m_Dlg3.ShowWindow(SW_HIDE);
 	CString title;
@@ -725,8 +751,32 @@ void CHXDlg::OnMenuF4()
 void CHXDlg::OnMenuF5()
 {
 	// TODO: 在此添加命令处理程序代码
+	/*if (LoginFlag == false)
+	{
+		m_Dlg4.ShowWindow(SW_SHOW);
+		m_Dlg1.ShowWindow(SW_HIDE);
+		m_Dlg2.ShowWindow(SW_HIDE);
+		m_Dlg3.ShowWindow(SW_HIDE);
+		m_Dlg5.ShowWindow(SW_HIDE);
+		CString title;
+		title = _T("喷胶主监控");
+		this->SetWindowText(title);
+		MessageBox(_T("请登录管理员账户"));
+	}
+	else
+	{
+		m_Dlg3.ShowWindow(SW_SHOW);
+		m_Dlg1.ShowWindow(SW_HIDE);
+		m_Dlg2.ShowWindow(SW_HIDE);
+		m_Dlg4.ShowWindow(SW_HIDE);
+		m_Dlg5.ShowWindow(SW_HIDE);
+		CString title;
+		title = _T("系统设置");
+		this->SetWindowText(title);
+	}*/
 	m_Dlg3.ShowWindow(SW_SHOW);
 	m_Dlg1.ShowWindow(SW_HIDE);
+	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg2.ShowWindow(SW_HIDE);
 	m_Dlg5.ShowWindow(SW_HIDE);
 	CString title;
