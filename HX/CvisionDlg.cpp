@@ -49,6 +49,7 @@ void CvisionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VIS_BTN_OPDATA, m_vs_btn_opdata);
 	DDX_Control(pDX, IDC_VIS_BTN_OPMOD, m_vs_btn_opmod);
 	DDX_Control(pDX, IDC_VIS_BTN_OPVS, m_vs_btn_opvs);
+	DDX_Control(pDX, IDC_VS_PIC_LOGO, m_vs_pic_logo);
 }
 
 
@@ -212,7 +213,8 @@ BOOL CvisionDlg::OnInitDialog()
 		struWndpl.rcNormalPosition = rectFullScreen;
 		SetWindowPlacement(&struWndpl);
 	}
-	
+	m_vs_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
+	m_vs_pic_logo.SetBitmap(m_vs_hBitmap_logo);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -539,6 +541,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		case 2:
 		{
+			DisconnectFlag = false;
 			SendOnce_Vision = false;
 			m_Vision_T1 = GetTickCount();
 			if (m_Vision_T2 != 0 && RecMsgFlag == true && OverTime_Vision == false)

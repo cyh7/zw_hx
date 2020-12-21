@@ -40,6 +40,7 @@ void CdataDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DATETIMEPICKER3, m_dat_yearEnd);
 	DDX_Control(pDX, IDC_DATETIMEPICKER4, m_dat_timeEnd);
 	DDX_Control(pDX, IDC_DAT_BTN_OPDAT, m_dat_btn_opdat);
+	DDX_Control(pDX, IDC_DATA_PIC_LOGO, m_data_pic_logo);
 }
 
 
@@ -240,6 +241,9 @@ BOOL CdataDlg::OnInitDialog()
 		struWndpl.rcNormalPosition = rectFullScreen;
 		SetWindowPlacement(&struWndpl);
 	}
+
+	m_data_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
+	m_data_pic_logo.SetBitmap(m_data_hBitmap_logo);
 
 	if (!ConnectDB())
 	{

@@ -35,6 +35,7 @@ void InitLayoutMonitor(CLayout& layout, CWnd* parent)
 
 	layout.RegisterControl(IDC_MON_STATIC_NAME, CLayout::e_stretch_all);
 	layout.RegisterControl(IDC_MON_PIC_MAIN, CLayout::e_stretch_all);
+	layout.RegisterControl(IDC_MON_PIC_LOGO, CLayout::e_stretch_all);
 }
 
 #endif

@@ -59,6 +59,7 @@ void CcadDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CAD_BTN_OPDATA, m_cad_btn_opdata);
 	DDX_Control(pDX, IDC_CAD_BTN_OPMOD, m_cad_btn_opmod);
 	DDX_Control(pDX, IDC_CAD_BTN_OPCAD, m_cad_btn_opcad);
+	DDX_Control(pDX, IDC_CAD_PIC_LOGO, m_cad_pic_logo);
 }
 
 
@@ -273,6 +274,9 @@ BOOL CcadDlg::OnInitDialog()
 	struWndpl.showCmd = SW_SHOWNORMAL;
 	struWndpl.rcNormalPosition = rectFullScreen;
 	SetWindowPlacement(&struWndpl);
+
+	m_cad_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
+	m_cad_pic_logo.SetBitmap(m_cad_hBitmap_logo);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE

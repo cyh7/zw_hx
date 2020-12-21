@@ -57,4 +57,6 @@ public:
 
 	HBITMAP m_mon_hBitmapMain;
 	CStatic m_mon_pic_main;
+	CStatic m_mon_pic_logo;
+	HBITMAP m_mon_hBitmap_logo;
 };

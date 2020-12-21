@@ -27,6 +27,7 @@ void InitLayoutCad(CLayout& layout, CWnd* parent)
 	layout.RegisterControl(IDC_CAD_BTN_OPCAD, CLayout::e_stretch_all);
 
 	layout.RegisterControl(IDC_CAD_STATIC_NAME, CLayout::e_stretch_all);
+	layout.RegisterControl(IDC_CAD_PIC_LOGO, CLayout::e_stretch_all);
 }
 
 #endif

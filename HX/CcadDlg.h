@@ -64,4 +64,6 @@ public:
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnBnClickedCadBtnOpmon();
 	CMyButton m_cad_btn_opcad;
+	CStatic m_cad_pic_logo;
+	HBITMAP m_cad_hBitmap_logo;
 };

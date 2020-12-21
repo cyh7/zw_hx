@@ -28,6 +28,8 @@ void InitLayoutData(CLayout& layout, CWnd* parent)
 
 	layout.RegisterControl(IDC_DAT_STATIC1, CLayout::e_stretch_all);
 	layout.RegisterControl(IDC_DAT_STATIC2, CLayout::e_stretch_all);
+
+	layout.RegisterControl(IDC_DATA_PIC_LOGO, CLayout::e_stretch_all);
 }
 
 #endif

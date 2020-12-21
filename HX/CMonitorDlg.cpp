@@ -41,6 +41,7 @@ void CMonitorDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_MON_EDIT_THETA, m_mon_edit_theta);
 	DDX_Control(pDX, IDC_MON_BTN_OPMON, m_mon_btn_opmon);
 	DDX_Control(pDX, IDC_MON_PIC_MAIN, m_mon_pic_main);
+	DDX_Control(pDX, IDC_MON_PIC_LOGO, m_mon_pic_logo);
 }
 
 
@@ -222,7 +223,8 @@ BOOL CMonitorDlg::OnInitDialog()
 		SetWindowPlacement(&struWndpl);
 	}
 	
-	
+	m_mon_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
+	m_mon_pic_logo.SetBitmap(m_mon_hBitmap_logo);
 
 	SetTimer(1, 1000, NULL);
 

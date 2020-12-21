@@ -151,6 +151,7 @@ void CmodbusDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_XCEILING, m_mod_edit_xceil);
 	DDX_Text(pDX, IDC_EDIT_YCEILING, m_mod_edit_yceil);
 	DDX_Text(pDX, IDC_EDIT_THETACEILING, m_mod_edit_thetaceil);
+	DDX_Control(pDX, IDC_MOD_PIC_LOGO, m_mod_pic_logo);
 }
 
 
@@ -481,6 +482,8 @@ BOOL CmodbusDlg::OnInitDialog()
 	struWndpl.rcNormalPosition = rectFullScreen;
 	SetWindowPlacement(&struWndpl);
 
+	m_mod_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
+	m_mod_pic_logo.SetBitmap(m_mod_hBitmap_logo);
 	
 
 	return TRUE;  // return TRUE unless you set the focus to a control

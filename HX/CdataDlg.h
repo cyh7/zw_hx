@@ -76,4 +76,6 @@ public:
 	afx_msg void OnBnClickedDatBtnClear();
 	CMyButton m_dat_btn_opdat;
 	BOOL InsertDB(CString time, CString type, DWORD batch, double x, double y, double theta, CString good, CString plc, CString spray, CString stop);
+	CStatic m_data_pic_logo;
+	HBITMAP m_data_hBitmap_logo;
 };

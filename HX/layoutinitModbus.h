@@ -69,7 +69,7 @@ void InitLayoutModbus(CLayout& layout, CWnd* parent)
 	layout.RegisterControl(IDC_EDIT_THETACEILING, CLayout::e_stretch_all);
 
 	layout.RegisterControl(IDC_MOD_STATIC_NAME, CLayout::e_stretch_all);
-	//layout.RegisterControl(IDC_MOD_PIC_HG, CLayout::e_stretch_all);
+	layout.RegisterControl(IDC_MOD_PIC_LOGO, CLayout::e_stretch_all);
 }
 
 #endif

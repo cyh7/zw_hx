@@ -55,4 +55,6 @@ public:
 
 
 
+	CStatic m_vs_pic_logo;
+	HBITMAP m_vs_hBitmap_logo;
 };
