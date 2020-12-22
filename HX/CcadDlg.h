@@ -66,4 +66,7 @@ public:
 	CMyButton m_cad_btn_opcad;
 	CStatic m_cad_pic_logo;
 	HBITMAP m_cad_hBitmap_logo;
+
+	CFont f_cad_font;
+	CFont f_cad_name;
 };

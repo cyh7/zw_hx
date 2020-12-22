@@ -139,8 +139,8 @@ BOOL CMonitorDlg::OnInitDialog()
 
 	//字体
 	{
-		CFont* p_font = new CFont;
-		p_font->CreateFont(18,      // nHeight，文字大小
+		
+		f_mon_font.CreateFontW(18,      // nHeight，文字大小
 			0,          // nWidth
 			0,          // nEscapement
 			0,          // nOrientation
@@ -155,19 +155,18 @@ BOOL CMonitorDlg::OnInitDialog()
 			DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 			_T("微软雅黑"));       // lpszFac，字体
 		//静态文本
-		GetDlgItem(IDC_MON_STATIC_PLC)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_GLUE)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_STOP)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_TYPE)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_BATCH)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_COORD)->SetFont(p_font, false);
+		GetDlgItem(IDC_MON_STATIC_PLC)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_GLUE)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_STOP)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_TYPE)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_BATCH)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_COORD)->SetFont(&f_mon_font, false);
 	
-		GetDlgItem(IDC_MON_STATIC_X)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_Y)->SetFont(p_font, false);
-		GetDlgItem(IDC_MON_STATIC_THETA)->SetFont(p_font, false);
+		GetDlgItem(IDC_MON_STATIC_X)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_Y)->SetFont(&f_mon_font, false);
+		GetDlgItem(IDC_MON_STATIC_THETA)->SetFont(&f_mon_font, false);
 		
-		CFont* p_name = new CFont;
-		p_name->CreateFont(50,      // nHeight，文字大小
+		f_mon_name.CreateFontW(50,      // nHeight，文字大小
 			0,          // nWidth
 			0,          // nEscapement
 			0,          // nOrientation
@@ -181,7 +180,7 @@ BOOL CMonitorDlg::OnInitDialog()
 			DEFAULT_QUALITY,            // nQuality
 			DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 			_T("楷体"));       // lpszFac，字体
-		GetDlgItem(IDC_MON_STATIC_NAME)->SetFont(p_name, false);
+		GetDlgItem(IDC_MON_STATIC_NAME)->SetFont(&f_mon_name, false);
 
 	}
 	InitLayoutMonitor(m_layoutMonitor, this);

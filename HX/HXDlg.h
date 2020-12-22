@@ -48,30 +48,47 @@ protected:
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
-	CLayout m_layout;
-	
-	POINT old_HX;
-	CStatusBar m_Statusbar;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	CImageList m_imglist;
-	BOOL PreTranslateMessage(MSG* pMsg);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	CBrush m_HX_Brush;
-	CMyButton m_hx_btn_vision;
-	CMyButton m_hx_btn_cad;
-	CMyButton m_hx_btn_modbus;
 	afx_msg void OnBnClickedHxBtnVision();
 	afx_msg void OnBnClickedHxBtnCad();
 	afx_msg void OnBnClickedHxBtnModbus();
+	afx_msg void OnBnClickedHxBtnMonitor();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnBnClickedHxBtnData();
+	//注释了帮助，按F1帮助不会弹出
+	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
+//界面
+public:
+	//用以全屏
+	CLayout m_layout;
+	POINT old_HX;
+	//状态栏
+	CStatusBar m_Statusbar;
+	//快捷键以及屏蔽按键设置
+	BOOL PreTranslateMessage(MSG* pMsg);
+	//改变控件颜色的画刷
+	CBrush m_HX_Brush;
+	//自绘按钮变量
+	CMyButton m_hx_btn_vision;
+	CMyButton m_hx_btn_cad;
+	CMyButton m_hx_btn_modbus;
+	CMyButton m_hx_btn_monitor;
+	CMyButton m_hx_btn_data;
+
 	void ShowVision();
 	void ShowCad();
 	void ShowModbus();
-	CMyButton m_hx_btn_monitor;
-	CMyButton m_hx_btn_data;
-	afx_msg void OnBnClickedHxBtnData();
 	void ShowData();
-	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
-
+	void ShowMonitor();
+	//主窗口图片
+	CStatic m_hx_pic_main;
+	HBITMAP m_hBitmapMain;
+	//字体绘制
+	CFont f_hx_word;
+	CFont f_hx_title;
+//菜单栏
+public:
+	//快捷键声明
 	HACCEL hAccel;
 	afx_msg void OnMenuF1();
 	afx_msg void OnMenuF2();
@@ -80,9 +97,5 @@ public:
 	afx_msg void OnMenuF5();
 	afx_msg void OnMenuLogin();
 	afx_msg void OnMenuExit();
-	void ShowMonitor();
-	afx_msg void OnBnClickedHxBtnMonitor();
-	CStatic m_hx_pic_main;
-	HBITMAP m_hBitmapMain;
 	afx_msg void OnAbout();
 };

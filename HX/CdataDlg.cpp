@@ -162,8 +162,8 @@ BOOL CdataDlg::OnInitDialog()
 		m_dat_btn_opmod.setWordSize(200);
 	}
 	//字体改变
-	CFont* p_name = new CFont;
-	p_name->CreateFont(50,      // nHeight，文字大小
+	
+	f_data_name.CreateFontW(50,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -177,10 +177,9 @@ BOOL CdataDlg::OnInitDialog()
 		DEFAULT_QUALITY,            // nQuality
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("楷体"));       // lpszFac，字体
-	GetDlgItem(IDC_DAT_STATIC_NAME)->SetFont(p_name, false);
+	GetDlgItem(IDC_DAT_STATIC_NAME)->SetFont(&f_data_name, false);
 
-	CFont* p_font = new CFont;
-	p_font->CreateFont(18,      // nHeight，文字大小
+	f_data_font.CreateFontW(18,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -194,14 +193,14 @@ BOOL CdataDlg::OnInitDialog()
 		DEFAULT_QUALITY,            // nQuality
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("微软雅黑"));       // lpszFac，字体
-	GetDlgItem(IDC_DAT_STATIC_TIME)->SetFont(p_font, false);
-	GetDlgItem(IDC_DAT_STATIC_TIMEEND)->SetFont(p_font, false);
-	GetDlgItem(IDC_DATETIMEPICKER1)->SetFont(p_font, false);
-	GetDlgItem(IDC_DATETIMEPICKER2)->SetFont(p_font, false);
-	GetDlgItem(IDC_DATETIMEPICKER3)->SetFont(p_font, false);
-	GetDlgItem(IDC_DATETIMEPICKER4)->SetFont(p_font, false);
-	GetDlgItem(IDC_DAT_STATIC1)->SetFont(p_font, false);
-	GetDlgItem(IDC_DAT_STATIC2)->SetFont(p_font, false);
+	GetDlgItem(IDC_DAT_STATIC_TIME)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DAT_STATIC_TIMEEND)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DATETIMEPICKER1)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DATETIMEPICKER2)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DATETIMEPICKER3)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DATETIMEPICKER4)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DAT_STATIC1)->SetFont(&f_data_font, false);
+	GetDlgItem(IDC_DAT_STATIC2)->SetFont(&f_data_font, false);
 	m_Brush.CreateSolidBrush(RGB(240, 240, 220));
 	InitLayoutData(m_layoutData, this);
 

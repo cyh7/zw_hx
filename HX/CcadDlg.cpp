@@ -202,8 +202,8 @@ BOOL CcadDlg::OnInitDialog()
 	
 
 	//静态文本字体改变
-	CFont* p_font = new CFont;
-	p_font->CreateFont(18,      // nHeight，文字大小
+	
+	f_cad_font.CreateFontW(18,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -218,12 +218,11 @@ BOOL CcadDlg::OnInitDialog()
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("微软雅黑"));       // lpszFac，字体
 	//静态文本
-	GetDlgItem(IDC_STATIC_CAD_DRAW)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC_CAD_CHOOSE)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC_CAD_LOC)->SetFont(p_font, false);
+	GetDlgItem(IDC_STATIC_CAD_DRAW)->SetFont(&f_cad_font, false);
+	GetDlgItem(IDC_STATIC_CAD_CHOOSE)->SetFont(&f_cad_font, false);
+	GetDlgItem(IDC_STATIC_CAD_LOC)->SetFont(&f_cad_font, false);
 
-	CFont* p_name = new CFont;
-	p_name->CreateFont(50,      // nHeight，文字大小
+	f_cad_name.CreateFontW(50,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -237,7 +236,7 @@ BOOL CcadDlg::OnInitDialog()
 		DEFAULT_QUALITY,            // nQuality
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("楷体"));       // lpszFac，字体
-	GetDlgItem(IDC_CAD_STATIC_NAME)->SetFont(p_name, false);
+	GetDlgItem(IDC_CAD_STATIC_NAME)->SetFont(&f_cad_name, false);
 
 	InitLayoutCad(m_layoutCad, this);
 	//全屏幕操作

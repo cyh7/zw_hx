@@ -305,8 +305,7 @@ BOOL CHXDlg::OnInitDialog()
 	m_hx_btn_data.setWordSize(200);
 
 	//静态文本字体改变
-	CFont* p_title = new CFont;
-	p_title->CreateFont(70,      // nHeight，文字大小
+	f_hx_title.CreateFontW(70,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -321,10 +320,9 @@ BOOL CHXDlg::OnInitDialog()
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("楷体"));       // lpszFac，字体
 
-	GetDlgItem(IDC_HX_STATIC_TITLE)->SetFont(p_title, false);
+	GetDlgItem(IDC_HX_STATIC_TITLE)->SetFont(&f_hx_title, false);
 
-	CFont* p_word = new CFont;
-	p_word->CreateFont(50,      // nHeight，文字大小
+	f_hx_word.CreateFontW(50,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -338,8 +336,8 @@ BOOL CHXDlg::OnInitDialog()
 		DEFAULT_QUALITY,            // nQuality
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("楷体"));       // lpszFac，字体
-	GetDlgItem(IDC_HX_STATIC_GDUT)->SetFont(p_word, false);
-	GetDlgItem(IDC_HX_STATIC_GDUT2)->SetFont(p_word, false);
+	GetDlgItem(IDC_HX_STATIC_GDUT)->SetFont(&f_hx_word, false);
+	GetDlgItem(IDC_HX_STATIC_GDUT2)->SetFont(&f_hx_word, false);
 	//InitLayout(m_layout, this);
 	m_hBitmapMain = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_BITMAP2), IMAGE_BITMAP, 600, 500, LR_DEFAULTCOLOR);
 	m_hx_pic_main.SetBitmap(m_hBitmapMain);

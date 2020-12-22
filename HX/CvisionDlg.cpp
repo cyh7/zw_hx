@@ -139,8 +139,8 @@ BOOL CvisionDlg::OnInitDialog()
 		//设置字体大小
 		m_vs_btn_opmod.setWordSize(200);
 	}
-	CFont* p_name = new CFont;
-	p_name->CreateFont(50,      // nHeight，文字大小
+	
+	f_vs_font.CreateFontW(50,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -154,10 +154,10 @@ BOOL CvisionDlg::OnInitDialog()
 		DEFAULT_QUALITY,            // nQuality
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("楷体"));       // lpszFac，字体
-	GetDlgItem(IDC_VS_STATIC_NAME)->SetFont(p_name, false);
+	GetDlgItem(IDC_VS_STATIC_NAME)->SetFont(&f_vs_font, false);
 	
-	CFont* p_font = new CFont;
-	p_font->CreateFont(18,      // nHeight，文字大小
+	
+	f_vs_name.CreateFontW(18,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation

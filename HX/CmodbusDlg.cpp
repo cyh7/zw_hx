@@ -392,8 +392,9 @@ BOOL CmodbusDlg::OnInitDialog()
 	}
 	
 	//静态文本字体改变
-	CFont* p_font = new CFont;
-	p_font->CreateFont(18,      // nHeight，文字大小
+	//CFont* p_font = new CFont;
+	//p_font->CreateFont(18,      // nHeight，文字大小
+	f_mod_font.CreateFontW(18,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -408,28 +409,28 @@ BOOL CmodbusDlg::OnInitDialog()
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("微软雅黑"));       // lpszFac，字体
 	//静态文本
-	GetDlgItem(IDC_STATIC4)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC5)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC6)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC7)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC8)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC9)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC14)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC15)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC16)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC17)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC18)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC19)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC20)->SetFont(p_font, false);
+	GetDlgItem(IDC_STATIC4)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC5)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC6)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC7)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC8)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC9)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC14)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC15)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC16)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC17)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC18)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC19)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC20)->SetFont(&f_mod_font, false);
 	//三个 group_box
-	GetDlgItem(IDC_STATIC3)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC10)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC11)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC12)->SetFont(p_font, false);
-	GetDlgItem(IDC_STATIC13)->SetFont(p_font, false);
+	GetDlgItem(IDC_STATIC3)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC10)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC11)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC12)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC13)->SetFont(&f_mod_font, false);
 
-	CFont* p_name = new CFont;
-	p_name->CreateFont(50,      // nHeight，文字大小
+	
+	f_mod_name.CreateFontW(50,      // nHeight，文字大小
 		0,          // nWidth
 		0,          // nEscapement
 		0,          // nOrientation
@@ -443,7 +444,7 @@ BOOL CmodbusDlg::OnInitDialog()
 		DEFAULT_QUALITY,            // nQuality
 		DEFAULT_PITCH | FF_SWISS,   // nPitchAndFamily
 		_T("楷体"));       // lpszFac，字体
-	GetDlgItem(IDC_MOD_STATIC_NAME)->SetFont(p_name, false);
+	GetDlgItem(IDC_MOD_STATIC_NAME)->SetFont(&f_mod_name, false);
 
 	
 	InitLayoutModbus(m_layoutMod, this);

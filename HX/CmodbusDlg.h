@@ -151,4 +151,7 @@ public:
 	double m_mod_edit_thetaceil;
 	CStatic m_mod_pic_logo;
 	HBITMAP m_mod_hBitmap_logo;
+
+	CFont f_mod_font;
+	CFont f_mod_name;
 };

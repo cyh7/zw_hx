@@ -53,8 +53,9 @@ public:
 	afx_msg void OnBnClickedVisBtnOpmon();
 	CMyButton m_vs_btn_opvs;
 
-
-
 	CStatic m_vs_pic_logo;
 	HBITMAP m_vs_hBitmap_logo;
+
+	CFont f_vs_font;
+	CFont f_vs_name;
 };
