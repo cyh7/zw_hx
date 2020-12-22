@@ -173,6 +173,7 @@
 #define IDC_VS_PIC_LOGO                 1106
 #define IDC_DATA_PIC_LOGO               1107
 #define IDC_CAD_PIC_LOGO                1108
+#define IDC_VS_BTN_RESEND               1109
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -197,7 +198,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         32794
-#define _APS_NEXT_CONTROL_VALUE         1109
+#define _APS_NEXT_CONTROL_VALUE         1110
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

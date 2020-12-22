@@ -647,6 +647,9 @@ void CcadDlg::OnTimer(UINT_PTR nIDEvent)
 					//发送完毕之后，可以考虑每次按下发送键的时候把这个置为0，把定位数据置为0，方便下次发送
 					locGlueNum = 0;
 					KillTimer(2);
+
+					CvisionDlg *pvsdlg = CvisionDlg::pVisiondlg;
+					pvsdlg->ReSetTime();
 				}
 			}
 			//这里是上一组信息发送有误的情况
@@ -710,6 +713,9 @@ void CcadDlg::OnBnClickedButtonCadSend()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	OverTime = false;
+	//发送cad数据时停掉定时器1
+	CvisionDlg *pvsdlg = CvisionDlg::pVisiondlg;
+	pvsdlg->KillTime1();
 	CString temp;
 	CmodbusDlg *pdlg = CmodbusDlg::pModbusdlg;
 	pdlg->m_OpenCloseCtrl.GetWindowText(temp);///获取按钮的文本

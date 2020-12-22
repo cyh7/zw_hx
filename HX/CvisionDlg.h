@@ -58,4 +58,12 @@ public:
 
 	CFont f_vs_font;
 	CFont f_vs_name;
+	CMyButton m_vs_btn_resend;
+	afx_msg void OnBnClickedVsBtnResend();
+	// 停止定时器1
+	void KillTime1();
+	// 激活定时器1
+	void ReSetTime();
+
+	static CvisionDlg *pVisiondlg;
 };

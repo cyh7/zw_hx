@@ -25,7 +25,7 @@ CString LastTime;
 double vs_x;
 double vs_y;
 double vs_theta;
-
+CvisionDlg *CvisionDlg::pVisiondlg = NULL;
 
 // CvisionDlg 对话框
 
@@ -50,6 +50,7 @@ void CvisionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VIS_BTN_OPMOD, m_vs_btn_opmod);
 	DDX_Control(pDX, IDC_VIS_BTN_OPVS, m_vs_btn_opvs);
 	DDX_Control(pDX, IDC_VS_PIC_LOGO, m_vs_pic_logo);
+	DDX_Control(pDX, IDC_VS_BTN_RESEND, m_vs_btn_resend);
 }
 
 
@@ -65,6 +66,7 @@ BEGIN_MESSAGE_MAP(CvisionDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_HELPINFO()
 	ON_BN_CLICKED(IDC_VIS_BTN_OPMON, &CvisionDlg::OnBnClickedVisBtnOpmon)
+	ON_BN_CLICKED(IDC_VS_BTN_RESEND, &CvisionDlg::OnBnClickedVsBtnResend)
 END_MESSAGE_MAP()
 
 
@@ -74,6 +76,7 @@ BOOL CvisionDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	pVisiondlg = this;
 	//控件大小同步
 	CRect v_rect;
 	GetClientRect(&v_rect);
@@ -138,6 +141,16 @@ BOOL CvisionDlg::OnInitDialog()
 		m_vs_btn_opmod.setWordColor(RGB(255, 250, 250));
 		//设置字体大小
 		m_vs_btn_opmod.setWordSize(200);
+
+		GetDlgItem(IDC_VS_BTN_RESEND)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_vs_btn_resend.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_vs_btn_resend.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_vs_btn_resend.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_vs_btn_resend.setWordSize(200);
 	}
 	
 	f_vs_font.CreateFontW(50,      // nHeight，文字大小
@@ -681,3 +694,26 @@ BOOL CvisionDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 
 
 
+
+
+void CvisionDlg::OnBnClickedVsBtnResend()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	SetTimer(2, 50, NULL);
+}
+
+
+// 停止定时器1
+void CvisionDlg::KillTime1()
+{
+	// TODO: 在此处添加实现代码.
+	KillTimer(1);
+}
+
+
+// 激活定时器1
+void CvisionDlg::ReSetTime()
+{
+	// TODO: 在此处添加实现代码.
+	SetTimer(1, 200, NULL);
+}

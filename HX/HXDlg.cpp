@@ -622,7 +622,7 @@ void CHXDlg::ShowCad()
 void CHXDlg::ShowModbus()
 {
 	// TODO: 在此处添加实现代码.
-	/*if (LoginFlag == false)
+	if (LoginFlag == false)
 	{
 		m_Dlg4.ShowWindow(SW_SHOW);
 		m_Dlg1.ShowWindow(SW_HIDE);
@@ -644,15 +644,15 @@ void CHXDlg::ShowModbus()
 		CString title;
 		title = _T("系统设置");
 		this->SetWindowText(title);
-	}*/
-	m_Dlg3.ShowWindow(SW_SHOW);
+	}
+	/*m_Dlg3.ShowWindow(SW_SHOW);
 	m_Dlg1.ShowWindow(SW_HIDE);
 	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg2.ShowWindow(SW_HIDE);
 	m_Dlg5.ShowWindow(SW_HIDE);
 	CString title;
 	title = _T("系统设置");
-	this->SetWindowText(title);
+	this->SetWindowText(title);*/
 }
 
 void CHXDlg::ShowData()
@@ -750,7 +750,7 @@ void CHXDlg::OnMenuF4()
 void CHXDlg::OnMenuF5()
 {
 	// TODO: 在此添加命令处理程序代码
-	/*if (LoginFlag == false)
+	if (LoginFlag == false)
 	{
 		m_Dlg4.ShowWindow(SW_SHOW);
 		m_Dlg1.ShowWindow(SW_HIDE);
@@ -772,15 +772,15 @@ void CHXDlg::OnMenuF5()
 		CString title;
 		title = _T("系统设置");
 		this->SetWindowText(title);
-	}*/
-	m_Dlg3.ShowWindow(SW_SHOW);
+	}
+	/*m_Dlg3.ShowWindow(SW_SHOW);
 	m_Dlg1.ShowWindow(SW_HIDE);
 	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg2.ShowWindow(SW_HIDE);
 	m_Dlg5.ShowWindow(SW_HIDE);
 	CString title;
 	title = _T("系统设置");
-	this->SetWindowText(title);
+	this->SetWindowText(title);*/
 }
 
 

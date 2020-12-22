@@ -349,7 +349,7 @@ BOOL CdataDlg::ConnectDB()
 		mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0);
 		ConnectSucces = true;
 	}
-	catch (_com_error *e)
+	catch (_com_error)
 	{
 		ConnectSucces = false;
 	}
@@ -383,7 +383,7 @@ BOOL CdataDlg::SelectDB()
 		m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
 
 	}
-	catch(_com_error *e)
+	catch(_com_error)
 	{
 		IsConnOpen = false;
 	}
@@ -529,7 +529,7 @@ BOOL CdataDlg::SelectDateDB()
 		mysql_query(&m_sqlCon, query);
 		m_dat_res = mysql_store_result(&m_sqlCon);
 	}
-	catch(_com_error *e)
+	catch(_com_error)
 	{
 		IsConnOpen = false;
 	}
@@ -576,7 +576,7 @@ BOOL CdataDlg::DeleteDB()
 	{
 		mysql_query(&m_sqlCon, query);
 	}
-	catch (_com_error *e)
+	catch (_com_error )
 	{
 		IsConnOpen = false;
 	}
@@ -682,9 +682,11 @@ void CdataDlg::OnBnClickedDatBtnClear()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	ClearDB(); 
-	GetDataFromDB();
+	m_dat_list.DeleteAllItems();
+	UpdateData(FALSE);
+	//GetDataFromDB();
 	//显示数据
-	ShowInfo();
+	//ShowInfo();
 }
 
 
