@@ -1201,9 +1201,7 @@ int locateleft()
 			}
 		}
 	}
-
 	//求凸包
-
 
 	RegionToBin(ho_SelectedRegions, &ho_BinImage1, 255, 0, hv_Width, hv_Height);
 	MedianImage(ho_BinImage1, &ho_ImageMedian, "square", hv_Filter_block_radius, "mirrored");
@@ -1229,12 +1227,38 @@ int locateleft()
 	TupleLength(hv_RowBegin, &hv_Length);
 	//检查识别出了几条直线
 
-	if (hv_Length !=1)
+	if (hv_Length ==0||hv_Length>3)
 	{
 		check_l_over = 0;
 		empty_location_data();
 		AfxMessageBox(_T("左边没找到横直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域!"));
 		return 0;
+	}
+	if (hv_Length == 2)
+	{
+		int a, b;
+		if (hv_ColBegin[0] > hv_ColEnd[0])
+			a = hv_ColEnd[0].D();
+		else
+			a = hv_ColBegin[0].D();
+		if (hv_RowBegin1[1] > hv_RowEnd1[1])
+			b = hv_RowEnd1[1].D();
+		else
+			b = hv_RowBegin1[1].D();//发
+		if (a < b)
+		{
+			hv_RowBegin1 = hv_RowBegin1[0].D();
+			hv_ColBegin1 = hv_ColBegin1[0].D();
+			hv_RowEnd1 = hv_RowEnd1[0].D();
+			hv_ColEnd1 = hv_ColEnd1[0].D();
+		}
+		else
+		{
+			hv_RowBegin1 = hv_RowBegin1[1].D();
+			hv_ColBegin1 = hv_ColBegin1[1].D();
+			hv_RowEnd1 = hv_RowEnd1[1].D();
+			hv_ColEnd1 = hv_ColEnd1[1].D();
+		}
 	}
 	
 
