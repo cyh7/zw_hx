@@ -47,7 +47,7 @@ public:
 	void ClearData();
 	BOOL SelectDateDB();
 	// 存放数据库记录，最大为100条
-	std::vector<std::string> m_dat_data[100];
+	//std::vector<std::string> m_dat_data[20000];
 	void GetDataFromDB();
 	// 显示数据
 	void ShowInfo();

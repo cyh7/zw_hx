@@ -32,6 +32,9 @@ void CLoginDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_USER, m_user);
 	DDX_Text(pDX, IDC_EDIT_PWD, m_pwd);
+	DDX_Control(pDX, IDC_BUTTON_LOGIN, m_log_btn_login);
+	DDX_Control(pDX, IDC_BUTTON_CANCEL, m_log_btn_cancel);
+	DDX_Control(pDX, IDC_BUTTON_SETPWD, m_log_btn_setpwd);
 }
 
 
@@ -40,6 +43,8 @@ BEGIN_MESSAGE_MAP(CLoginDlg, CDialogEx)
 	
 	ON_BN_CLICKED(IDC_BUTTON_CANCEL, &CLoginDlg::OnBnClickedButtonCancel)
 	ON_BN_CLICKED(IDC_BUTTON_SETPWD, &CLoginDlg::OnBnClickedButtonSetpwd)
+	ON_WM_PAINT()
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -117,6 +122,41 @@ BOOL CLoginDlg::OnInitDialog()
 	//m_pwd = pwd;
 	UpdateData(FALSE);
 
+	m_log_Brush.CreateSolidBrush(RGB(240, 240, 220));
+	//按钮重绘
+	{
+		GetDlgItem(IDC_BUTTON_LOGIN)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_log_btn_login.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_log_btn_login.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_log_btn_login.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_log_btn_login.setWordSize(100);
+
+		GetDlgItem(IDC_BUTTON_CANCEL)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_log_btn_cancel.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_log_btn_cancel.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_log_btn_cancel.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_log_btn_cancel.setWordSize(100);
+
+		GetDlgItem(IDC_BUTTON_SETPWD)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_log_btn_setpwd.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_log_btn_setpwd.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_log_btn_setpwd.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_log_btn_setpwd.setWordSize(100);
+	}
+	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -139,4 +179,50 @@ BOOL CLoginDlg::PreTranslateMessage(MSG* pMsg)
 	if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)  //屏蔽ALT+F4
 		return TRUE;
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CLoginDlg::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+					   // TODO: 在此处添加消息处理程序代码
+	CRect rect;
+	GetClientRect(rect);
+
+	dc.FillSolidRect(rect, RGB(240, 240, 220));
+	//dc.FillSolidRect(rect, RGB(125, 125, 255));
+
+
+	CDialogEx::OnPaint();
+
+					   // 不为绘图消息调用 CDialogEx::OnPaint()
+}
+
+
+HBRUSH CLoginDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+	if (nCtlColor == CTLCOLOR_STATIC)//如果当前控件属于静态文本
+	{
+		//pDC->SetTextColor(RGB(255, 0, 0)); //字体颜色
+		pDC->SetTextColor(RGB(50, 50, 200));  //字体颜色
+		pDC->SetBkColor(RGB(240, 240, 220));   //字体背景色
+		pDC->SetBkMode(TRANSPARENT); //设置字体背景为透明
+		//pDC->SetFont(p_font);//设置字体
+
+		//pDC-> SetBkColor(RGB(0, 0, 255));  //字体背景色
+		return (HBRUSH)m_log_Brush.GetSafeHandle();
+	}
+	if (pWnd->GetDlgCtrlID() == IDC_EDIT_USER || IDC_EDIT_PWD)
+	{
+		pDC->SetBkMode(TRANSPARENT);
+		//pDC->SetTextColor(RGB(50, 50, 200));  //字体颜色
+		//pDC->SetBkColor(RGB(240, 240, 220));   //字体背景色
+		return (HBRUSH)m_log_Brush.GetSafeHandle();  // 设置背景色
+		//return (HBRUSH)::GetStockObject(WHITE_BRUSH);
+	}
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	return hbr;
 }

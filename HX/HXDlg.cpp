@@ -1,10 +1,6 @@
 ﻿
 // HXDlg.cpp: 实现文件
-//陈一航是个人上人
 
-//老8是吴卓承
-
-//老吴秘制小汉堡
 
 #include "pch.h"
 #include "framework.h"
@@ -100,6 +96,7 @@ BEGIN_MESSAGE_MAP(CHXDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_EXIT, &CHXDlg::OnMenuExit)
 	ON_BN_CLICKED(IDC_HX_BTN_MONITOR, &CHXDlg::OnBnClickedHxBtnMonitor)
 	ON_COMMAND(ID_32772, &CHXDlg::OnAbout)
+	ON_COMMAND(ID_32805, &CHXDlg::OnExitHX)
 END_MESSAGE_MAP()
 
 
@@ -131,9 +128,12 @@ BOOL CHXDlg::OnInitDialog()
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
-	SetIcon(m_hIcon, TRUE);			// 设置大图标
-	SetIcon(m_hIcon, FALSE);		// 设置小图标
+	//SetIcon(m_hIcon, TRUE);			// 设置大图标
+	//SetIcon(m_hIcon, FALSE);		// 设置小图标
+	m_myhIcon = LoadIcon(theApp.m_hInstance, MAKEINTRESOURCE(IDI_GDUT));
 
+	SetIcon(m_myhIcon, TRUE);
+	SetIcon(m_myhIcon, FALSE);
 	// TODO: 在此添加额外的初始化代码
 	//菜单栏设置
 	CMenu menu;
@@ -235,16 +235,18 @@ BOOL CHXDlg::OnInitDialog()
 	
 
 	//分别创建三个非模态窗口，并隐藏
+	m_Dlg3.Create(IDD_MODBUS);
+	m_Dlg3.ShowWindow(SW_HIDE);
+	m_Dlg5.Create(IDD_DATABASE);
+	m_Dlg5.ShowWindow(SW_HIDE);
 	m_Dlg1.Create(IDD_VISION);
 	m_Dlg1.ShowWindow(SW_HIDE);
 	m_Dlg2.Create(IDD_CAD);
 	m_Dlg2.ShowWindow(SW_HIDE);
-	m_Dlg3.Create(IDD_MODBUS);
-	m_Dlg3.ShowWindow(SW_HIDE);
+	
 	m_Dlg4.Create(IDD_MONITOR);
 	m_Dlg4.ShowWindow(SW_HIDE);
-	m_Dlg5.Create(IDD_DATABASE);
-	m_Dlg5.ShowWindow(SW_HIDE);
+	
 	//背景颜色画刷
 	m_HX_Brush.CreateSolidBrush(RGB(240, 240, 220));
 
@@ -471,6 +473,10 @@ void CHXDlg::OnTimer(UINT_PTR nIDEvent)
 		{
 			m_Statusbar.SetPaneText(1, _T("通信状态: 连接中断"));
 		}
+		if (ConnectClose == true)
+		{
+			m_Statusbar.SetPaneText(1, _T("通信状态: 通信关闭"));
+		}
 		break;
 	}
 
@@ -546,10 +552,12 @@ void CHXDlg::OnBnClickedHxBtnVision()
 	m_Dlg3.ShowWindow(SW_HIDE);
 	m_Dlg4.ShowWindow(SW_HIDE);
 	m_Dlg5.ShowWindow(SW_HIDE);
-
 	CString title;
 	title = _T("视觉处理");
 	this->SetWindowText(title);
+
+	CvisionDlg* pVisiondlg = CvisionDlg::pVisiondlg;
+	pVisiondlg->CvisionDlg::Show_edit_frame();
 }
 
 void CHXDlg::OnBnClickedHxBtnCad()
@@ -568,14 +576,29 @@ void CHXDlg::OnBnClickedHxBtnCad()
 void CHXDlg::OnBnClickedHxBtnModbus()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_Dlg3.ShowWindow(SW_SHOW);
-	m_Dlg1.ShowWindow(SW_HIDE);
-	m_Dlg2.ShowWindow(SW_HIDE);
-	m_Dlg4.ShowWindow(SW_HIDE);
-	m_Dlg5.ShowWindow(SW_HIDE);
-	CString title;
-	title = _T("系统设置");
-	this->SetWindowText(title);
+	if (LoginFlag == false)
+	{
+		m_Dlg4.ShowWindow(SW_SHOW);
+		m_Dlg1.ShowWindow(SW_HIDE);
+		m_Dlg2.ShowWindow(SW_HIDE);
+		m_Dlg3.ShowWindow(SW_HIDE);
+		m_Dlg5.ShowWindow(SW_HIDE);
+		CString title;
+		title = _T("喷胶主监控");
+		this->SetWindowText(title);
+		MessageBox(_T("请登录管理员账户"));
+	}
+	else
+	{
+		m_Dlg3.ShowWindow(SW_SHOW);
+		m_Dlg1.ShowWindow(SW_HIDE);
+		m_Dlg4.ShowWindow(SW_HIDE);
+		m_Dlg2.ShowWindow(SW_HIDE);
+		m_Dlg5.ShowWindow(SW_HIDE);
+		CString title;
+		title = _T("系统设置");
+		this->SetWindowText(title);
+	}
 }
 
 void CHXDlg::OnBnClickedHxBtnData()
@@ -820,4 +843,16 @@ void CHXDlg::OnAbout()
 	// TODO: 在此添加命令处理程序代码
 	CAboutDlg dlgAbout;
 	dlgAbout.DoModal();
+}
+
+
+void CHXDlg::OnExitHX()
+{
+	// TODO: 在此添加命令处理程序代码
+	exitFlag = true;
+	Sleep(50);
+	CmodbusDlg* pdlg = CmodbusDlg::pModbusdlg;
+	pdlg->OnClose();
+	Sleep(50);
+	AfxGetMainWnd()->SendMessage(WM_CLOSE);
 }

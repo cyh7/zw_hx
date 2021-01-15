@@ -69,4 +69,5 @@ public:
 
 	CFont f_cad_font;
 	CFont f_cad_name;
+	afx_msg void OnBnClickedButton1();
 };

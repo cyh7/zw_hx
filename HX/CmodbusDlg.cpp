@@ -8,7 +8,7 @@
 #include <vector>
 #include "layoutinitModbus.h"
 #include "HXDlg.h"
-
+#include "InfoFile.h"
 
 
 int BaudRateArray[] = { 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 56000, 57600, 115200 };
@@ -26,12 +26,6 @@ bool RecMsgFlag = true;
 //接收超时
 bool OverTime_Vision = false;
 bool OverTime = false;
-//发送的胶条数量
-int SendGlueNum = 0;
-
-
-
-
 //T1为开关按下时刻，T2为数据接收时刻
 long m_CadT1;
 //给T2赋一个初值，防止首次执行时发生误判，之后的时候若T2值为0则说明通信断线，我们没有收到接收函数
@@ -42,22 +36,13 @@ long m_Vision_T2 = 1;
 //循环发送计时
 long m_Status_T1;
 long m_Status_T2 = 1;
-
 //判断背板是否到达
 bool ArriveFlag = false;
-
-
-//胶条数据的总数量，是从sendGlueData赋值
-//int vecGlueNum;
-//发送胶条时计数
-//int locGlueNum = 0;
-
 //声明一个当前是否是单次发送的flag
-bool SendOnce = false;
+bool SendOnce = true;
 //是否是每200s询问一次，不是的话就属于发送视觉识别的程序，计算发送定位数据是否超时
-bool SendOnce_Vision = false;
-
-
+bool SendOnce_Vision = true;
+//断线次数
 int DisconnectNum = 0;
 //设置界面
 //X上下限 Y上下限 THETA上下限
@@ -75,14 +60,18 @@ bool SprayFlag = false;
 DWORD SprayBatch = 0;
 //是否良品
 bool GoodFlag = true;
-
 //PLC正常
 bool PlcFlag = true;
 //通信状态
 bool DisconnectFlag = true;
+//连接关闭
+bool ConnectClose = false;
 //急停标志位
 bool StopFlag = false;
-
+//可否写入cad数据 初始值为true
+bool PlcCadWriteFlag = false;
+//读cad图纸是否接收完毕
+bool PlcCadRecFlag = false;
 //插入数据库所需变量
 //防止识别完成后重复插入，识别完置0；插入完成置1
 int insertdata = 0;
@@ -94,9 +83,8 @@ CString data_spray;
 CString data_plc;
 //急停
 CString data_stop;
-
-//这个数据暂时不用发完就清空，因为每一次都会把对应的值覆盖进去
-//WORD GlueTemp[200];//把胶条数据从函数里边提取出来变成全局的，用以发送
+//退出程序关闭串口库所用到的标志位
+bool exitFlag = false;
 // CmodbusDlg 对话框
 
 IMPLEMENT_DYNAMIC(CmodbusDlg, CDialogEx)
@@ -112,6 +100,13 @@ CmodbusDlg::CmodbusDlg(CWnd* pParent /*=nullptr*/)
 	, m_mod_edit_xceil(0)
 	, m_mod_edit_yceil(0)
 	, m_mod_edit_thetaceil(0)
+	, m_mod_edit_frame_length(0)
+	, m_mod_edit_frame_width(0)
+	, m_mod_edit_imagethreshold(0)
+	, m_mod_edit_image_filter_radius(0)
+	, m_mod_edit_image_close_radius(0)
+	, m_mod_edit_baoguang(0)
+	, m_mod_baoguang2(0)
 {
 
 }
@@ -152,6 +147,16 @@ void CmodbusDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_YCEILING, m_mod_edit_yceil);
 	DDX_Text(pDX, IDC_EDIT_THETACEILING, m_mod_edit_thetaceil);
 	DDX_Control(pDX, IDC_MOD_PIC_LOGO, m_mod_pic_logo);
+	DDX_Text(pDX, IDC_EDIT_FRAMELENGTH, m_mod_edit_frame_length);
+	DDX_Text(pDX, IDC_EDIT_FRAMEWIDTH, m_mod_edit_frame_width);
+	DDX_Control(pDX, IDC_BUTTON1, m_mod_btn_timesend);
+	DDX_Control(pDX, IDC_MOD_BTN_OPCAM, m_mod_btn_opcam);
+	DDX_Control(pDX, IDC_MOD_BTN_CLOSECAM, m_mod_btn_closecam);
+	DDX_Text(pDX, IDC_EDIT_IMAGETHRESHOLD, m_mod_edit_imagethreshold);
+	DDX_Text(pDX, IDC_EDIT_Filter_radius, m_mod_edit_image_filter_radius);
+	DDX_Text(pDX, IDC_EDIT_IMAGE_close_radius, m_mod_edit_image_close_radius);
+	DDX_Text(pDX, IDC_EDIT_BAOGUANG, m_mod_edit_baoguang);
+	DDX_Text(pDX, IDC_EDIT_BAOGUANG2, m_mod_baoguang2);
 }
 
 
@@ -172,8 +177,25 @@ BEGIN_MESSAGE_MAP(CmodbusDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_MOD_BTN_CHANGE, &CmodbusDlg::OnBnClickedModBtnChange)
 	ON_WM_HELPINFO()
 	ON_BN_CLICKED(IDC_MOD_BTN_OPMON, &CmodbusDlg::OnBnClickedModBtnOpmon)
+	ON_BN_CLICKED(IDC_MOD_BTN_OPCAM, &CmodbusDlg::OnBnClickedModBtnOpcam)
+	ON_BN_CLICKED(IDC_MOD_BTN_CLOSECAM, &CmodbusDlg::OnBnClickedModBtnClosecam)
+	ON_STN_CLICKED(IDC_STATIC14, &CmodbusDlg::OnStnClickedStatic14)
+	ON_EN_CHANGE(IDC_EDIT_TYPE, &CmodbusDlg::OnEnChangeEditType)
+	ON_BN_CLICKED(IDC_STATIC10, &CmodbusDlg::OnBnClickedStatic10)
+	ON_BN_CLICKED(IDC_STATIC11, &CmodbusDlg::OnBnClickedStatic11)
+	ON_BN_CLICKED(IDC_STATIC3, &CmodbusDlg::OnBnClickedStatic3)
 END_MESSAGE_MAP()
 
+
+UINT ThreadRec(LPVOID param)
+{
+	CmodbusDlg* pdlg = CmodbusDlg::pModbusdlg;
+
+	while (1)
+	{
+		pdlg->OnReceive();
+	}
+}
 
 // CmodbusDlg 消息处理程序
 //窗口初始化
@@ -389,6 +411,36 @@ BOOL CmodbusDlg::OnInitDialog()
 		m_mod_btn_change.setWordColor(RGB(255, 250, 250));
 		//设置字体大小
 		m_mod_btn_change.setWordSize(200);
+
+		GetDlgItem(IDC_MOD_BTN_OPCAM)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_mod_btn_opcam.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_mod_btn_opcam.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_mod_btn_opcam.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_mod_btn_opcam.setWordSize(200);
+
+		GetDlgItem(IDC_MOD_BTN_CLOSECAM)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_mod_btn_closecam.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_mod_btn_closecam.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_mod_btn_closecam.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_mod_btn_closecam.setWordSize(200);
+
+		GetDlgItem(IDC_BUTTON1)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_mod_btn_timesend.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_mod_btn_timesend.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_mod_btn_timesend.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_mod_btn_timesend.setWordSize(200);
 	}
 	
 	//静态文本字体改变
@@ -422,6 +474,14 @@ BOOL CmodbusDlg::OnInitDialog()
 	GetDlgItem(IDC_STATIC18)->SetFont(&f_mod_font, false);
 	GetDlgItem(IDC_STATIC19)->SetFont(&f_mod_font, false);
 	GetDlgItem(IDC_STATIC20)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC21)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC22)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC23)->SetFont(&f_mod_font, false);
+
+	GetDlgItem(IDC_STATIC24)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC25)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC26)->SetFont(&f_mod_font, false);
+	GetDlgItem(IDC_STATIC27)->SetFont(&f_mod_font, false);
 	//三个 group_box
 	GetDlgItem(IDC_STATIC3)->SetFont(&f_mod_font, false);
 	GetDlgItem(IDC_STATIC10)->SetFont(&f_mod_font, false);
@@ -486,6 +546,25 @@ BOOL CmodbusDlg::OnInitDialog()
 	m_mod_hBitmap_logo = (HBITMAP)LoadImage(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDB_HG), IMAGE_BITMAP, 200, 40, LR_DEFAULTCOLOR);
 	m_mod_pic_logo.SetBitmap(m_mod_hBitmap_logo);
 	
+	CInfoFile file;
+	file.ReadDocline(backboard, x_floor, x_ceil, y_floor, y_ceil, theta_floor, theta_ceil, edit_frame_length, edit_frame_width, hv_Threshold, hv_Filter_block_radius, hv_closing_radius,baoguang_time, baoguang2_time);
+	m_mod_type = backboard;
+	m_mod_edit_xfloor = x_floor;
+	m_mod_edit_xceil = x_ceil;
+	m_mod_edit_yfloor = y_floor;
+	m_mod_edit_yceil = y_ceil;
+	m_mod_edit_thetafloor = theta_floor;
+	m_mod_edit_thetaceil = theta_ceil;
+	m_mod_edit_frame_length = edit_frame_length;
+	m_mod_edit_frame_width = edit_frame_width;
+	m_mod_edit_imagethreshold = hv_Threshold;
+	m_mod_edit_image_close_radius = hv_closing_radius;
+	m_mod_edit_image_filter_radius = hv_Filter_block_radius;
+	m_mod_edit_baoguang = baoguang_time;
+	m_mod_baoguang2 = baoguang2_time;
+	UpdateData(FALSE);
+
+	HANDLE hthreadREC = AfxBeginThread(ThreadRec, this, THREAD_PRIORITY_BELOW_NORMAL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -803,27 +882,11 @@ void CmodbusDlg::OnReceive()
 	DWORD MidData;
 	CString RecStr;
 	CString strtemp;
-	//设置单次发送不计时T2,非单次发送计时T2
-	if (SendOnce == false)
-	{
-		//MessageBox(_T("计时"));
-		m_CadT2 = GetTickCount();
-		if ((m_CadT2 - m_CadT1) > 50)
-		OverTime = true;
-	}
-	/*if ((m_CadT2 - m_CadT1) > 50)
-		OverTime = true;*/
-
-	if (SendOnce_Vision == false)
-	{
-		m_Vision_T2 = GetTickCount();
-		if ((m_Vision_T2 - m_Vision_T1) > 50)
-			OverTime_Vision = true;
-	}
+	
 	/*if ((m_Vision_T2 - m_Vision_T1) > 50)
 		OverTime_Vision = true;*/
 
-	m_Status_T2 = GetTickCount();
+	
 
 	//CString tt;
 	//tt.Format(_T("2:%d"), T2 - T1);//前后之差即程序运行时间  
@@ -832,10 +895,21 @@ void CmodbusDlg::OnReceive()
 
 	//每次传进来的str都是新的 第二次的str是直接把所有的数据读到一块儿了
 	char * str = NULL;
-	str = new char[1024];
-
+	try 
+	{
+		str = new char[1024];
+	}
+	catch(...)
+	{
+		
+	}
 	//std::shared_ptr<char> str(new char[1024]);
-
+	if (exitFlag == true)
+	{
+		if(str != NULL)
+			delete []str;
+		return;
+	}
 	int iRet = m_SerialPort.readAllData(str); //06发过来的数据长度为8 接收到的数据是没错的
 
 	
@@ -847,6 +921,24 @@ void CmodbusDlg::OnReceive()
 	//Sleep(1000);
 	if (iRet > 0)
 	{
+		//设置单次发送不计时T2,非单次发送计时T2
+		if (SendOnce == false)
+		{
+			//MessageBox(_T("计时"));
+			m_CadT2 = GetTickCount64();
+			if ((m_CadT2 - m_CadT1) > 200)
+				OverTime = true;
+		}
+		/*if ((m_CadT2 - m_CadT1) > 50)
+			OverTime = true;*/
+
+		if (SendOnce_Vision == false)
+		{
+			m_Vision_T2 = GetTickCount64();
+			if ((m_Vision_T2 - m_Vision_T1) > 200)
+				OverTime_Vision = true;
+		}
+		m_Status_T2 = GetTickCount64();
 		//MessageBox(_T("1"));
 		if (iRet == 7)
 		{
@@ -876,98 +968,124 @@ void CmodbusDlg::OnReceive()
 			{
 				RecMsgFlag = true;
 			    //MessageBox(_T("相等"));
-			    MidData = SendFreqData[4];
-			    char MyChar[10];
-			    _itoa_s(MidData, MyChar, 10);
-			    //测试成功 RecStr值为1，长度为1可以进行后续判断了
-			    RecStr = MyChar;
+				if (SendFreqData[3] == 0)
+				{
+					MidData = SendFreqData[4];
+					char MyChar[10];
+					_itoa_s(MidData, MyChar, 10);
+					//测试成功 RecStr值为1，长度为1可以进行后续判断了
+					RecStr = MyChar;
 
-				//发送接收时间计算
-				//T2 = GetTickCount();
-				//CString tt;
-				//tt.Format(_T("%d"), T2 - T1);//前后之差即程序运行时间  
-				//MessageBox(tt);
+					//发送接收时间计算
+					//T2 = GetTickCount();
+					//CString tt;
+					//tt.Format(_T("%d"), T2 - T1);//前后之差即程序运行时间  
+					//MessageBox(tt);
 
-				//背板没到，没有停机，PLC正常，没有急停
-			    if (RecStr == "0") 
-			    {
-			        //MessageBox(_T("相等"));
-					ArriveFlag = false;
-					SprayFlag = false;
-					PlcFlag = true;
-					StopFlag = false;
+					//背板没到，没有停机，PLC正常，没有急停
+					if (RecStr == "1")
+					{
+						//MessageBox(_T("相等"));
+						ArriveFlag = false;
+						SprayFlag = false;
+						PlcFlag = true;
+						StopFlag = false;
 
-					//背板不在（离开）要把这个置为false，方便下一次进入程序
-					IdentifyDone = false;
-			    }
-				//背板没到，喷胶停机，PLC正常，没有急停
-			    else if (RecStr == "1")
-			    {
-					ArriveFlag = false;
-					SprayFlag = true;
-					PlcFlag = true;
-					StopFlag = false;
+						//背板不在（离开）要把这个置为false，方便下一次进入程序
+						IdentifyDone = false;
+					}
+					//背板没到，喷胶停机，PLC正常，没有急停
+					else if (RecStr == "2")
+					{
+						ArriveFlag = false;
+						SprayFlag = true;
+						PlcFlag = true;
+						StopFlag = false;
 
-					//背板不在（离开）要把这个置为false，方便下一次进入程序
-					IdentifyDone = false;
-			    }
-				//背板到位	没有停机	PLC正常	没有急停
-				else if (RecStr == "2")
-				{
-					ArriveFlag = true;
-					SprayFlag = false;
-					PlcFlag = true;
-					StopFlag = false;
-				}
-				//背板到位	停机	PLC正常	没有急停
-				else if (RecStr == "3")
-				{
-					ArriveFlag = true;
-					SprayFlag = true;
-					PlcFlag = true;
-					StopFlag = false;
-				}
-				//背板没到	没有停机	PLC不正常	没有急停
-				else if (RecStr == "4")
-				{
-					ArriveFlag = false;
-					SprayFlag = false;
-					PlcFlag = false;
-					StopFlag = false;
+						//背板不在（离开）要把这个置为false，方便下一次进入程序
+						IdentifyDone = false;
+					}
+					//背板到位	没有停机	PLC正常	没有急停
+					else if (RecStr == "3")
+					{
+						ArriveFlag = true;
+						SprayFlag = false;
+						PlcFlag = true;
+						StopFlag = false;
 
-					IdentifyDone = false;
-				}
-				//背板没到	停机	PLC不正常	没有急停
-				else if (RecStr == "5")
-				{
-					ArriveFlag = false;
-					SprayFlag = true;
-					PlcFlag = false;
-					StopFlag = false;
+					}
+					//背板到位	停机	PLC正常	没有急停
+					else if (RecStr == "4")
+					{
+						ArriveFlag = true;
+						SprayFlag = true;
+						PlcFlag = true;
+						StopFlag = false;
 
-					IdentifyDone = false;
+					}
+
+					//背板没到	没有停机	PLC不正常	没有急停
+					else if (RecStr == "9")
+					{
+						ArriveFlag = false;
+						SprayFlag = false;
+						PlcFlag = false;
+						StopFlag = false;
+
+
+						IdentifyDone = false;
+					}
+					//背板没到	停机	PLC不正常	没有急停
+					else if (RecStr == "10")
+					{
+						ArriveFlag = false;
+						SprayFlag = true;
+						PlcFlag = false;
+						StopFlag = false;
+
+						IdentifyDone = false;
+					}
+					//背板到位	没有停机	PLC不正常	没有急停
+					else if (RecStr == "11")
+					{
+						ArriveFlag = true;
+						SprayFlag = false;
+						PlcFlag = false;
+						StopFlag = false;
+					}
+					//背板到位	停机	PLC不正常	没有急停
+					else if (RecStr == "12")
+					{
+						ArriveFlag = true;
+						SprayFlag = true;
+						PlcFlag = false;
+						StopFlag = false;
+					}
+					//急停
+					else if (RecStr == "13")
+					{
+						StopFlag = true;
+					}
+					else if (RecStr == "254")
+					{
+						PlcCadWriteFlag = true;
+					}
+					else if (RecStr == "255")
+					{
+						PlcCadRecFlag = true;
+					}
 				}
-				//背板到位	没有停机	PLC不正常	没有急停
-				else if (RecStr == "6")
+				else
 				{
-					ArriveFlag = true;
-					SprayFlag = false;
-					PlcFlag = false;
-					StopFlag = false;
+					int test = 0;
+					test = SendFreqData[3] * 256 + SendFreqData[4];
+					//if (//xxflag = true)
+					//{
+					//	//赋值
+					//	//xxflag = false
+					//}
 				}
-				//背板到位	停机	PLC不正常	没有急停
-				else if (RecStr == "7")
-				{
-					ArriveFlag = true;
-					SprayFlag = true;
-					PlcFlag = false;
-					StopFlag = false;
-				}
-				//急停
-				else if (RecStr == "8")
-				{
-					StopFlag = true;
-				}
+			   
 			}
 			else
 			{
@@ -1043,6 +1161,14 @@ void CmodbusDlg::OnReceive()
 		CTime curTime;//当前时间
 		curTime = CTime::GetCurrentTime();
 		CString testLastTime = curTime.Format("%Y-%m-%d %H:%M:%S");
+		if (IdentifyDone == true && insertdata == 0)
+		{
+			JudgeStatus();
+			CdataDlg* pdatadlg = CdataDlg::pDatadlg;
+			pdatadlg->InsertDB(testLastTime, backboard, SprayBatch, vs_x, vs_y, vs_theta, data_good, data_plc, data_spray, data_stop);
+			insertdata = 1;
+		}
+
 		//把收到的数据显示出来
 		/*CString RecStr((char *)str);
 		m_EditReceiveCtrl.SetSel(-1, -1);
@@ -1072,13 +1198,7 @@ void CmodbusDlg::OnReceive()
 	//背板型号 2
 	//喷涂批次就是当前的SprayBatch 3
 	//X Y theta坐标   4 5 6
-	if (IdentifyDone == true && insertdata == 0)
-	{
-		JudgeStatus();
-		CdataDlg *pdatadlg = CdataDlg::pDatadlg;
-		//pdatadlg->InsertDB(LastTime, backboard, SprayBatch, vs_x, vs_y, vs_theta, data_good, data_plc, data_spray, data_stop);
-		insertdata = 1;
-	}
+	
 
 
 	delete []str;
@@ -1153,8 +1273,25 @@ void CmodbusDlg::SendData(int CommTypeIn, WORD DownAdd, DWORD DownData)
 void CmodbusDlg::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	CString temp;
+	m_mod_btn_timesend.GetWindowText(temp);///获取按钮的文本
+	UpdateData(true);
+
+	if (temp == _T("关闭通信"))///表示点击后是"关闭通信"，也就是已经关闭了串口
+	{
+		CvisionDlg* pvsdlg = CvisionDlg::pVisiondlg;
+		pvsdlg->KillTime1();
+		ConnectClose = true;
+		m_mod_btn_timesend.SetWindowText(_T("开始通信"));///设置按钮文字为"打开串口"
+	}
+	else if (temp == _T("开始通信"))
+	{
+		CvisionDlg* pvsdlg = CvisionDlg::pVisiondlg;
+		pvsdlg->ReSetTime();
+		ConnectClose = false;
+		m_mod_btn_timesend.SetWindowText(_T("关闭通信"));
+	}
 	
-	SetTimer(1, 200, NULL);
 	
 }
 
@@ -1305,6 +1442,8 @@ void CmodbusDlg::OnBnClickedModBtnChange()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
+	CInfoFile file;
+
 	backboard = m_mod_type;
 	SprayBatch = 0;
 	x_floor = m_mod_edit_xfloor;
@@ -1313,7 +1452,22 @@ void CmodbusDlg::OnBnClickedModBtnChange()
 	y_ceil = m_mod_edit_yceil;
 	theta_floor = m_mod_edit_thetafloor;
     theta_ceil = m_mod_edit_thetaceil;
+	edit_frame_width = m_mod_edit_frame_width;
+	edit_frame_length = m_mod_edit_frame_length;
+	hv_Threshold = m_mod_edit_imagethreshold;
+	hv_closing_radius = m_mod_edit_image_close_radius;
+	hv_Filter_block_radius = m_mod_edit_image_filter_radius;
+	//如果相机曝光时间改变,重新打开相机
+	if ((baoguang_time != m_mod_edit_baoguang) || (baoguang2_time != m_mod_baoguang2))
+	{
+		baoguang_time = m_mod_edit_baoguang;
+		baoguang2_time = m_mod_baoguang2;
+		CvisionDlg* pVisiondlg = CvisionDlg::pVisiondlg;
+		pVisiondlg->CvisionDlg::OnCloseCam();
+		pVisiondlg->CvisionDlg::OnOpenCam();
+	}
 
+	file.WirteDocline(backboard, x_floor, x_ceil, y_floor, y_ceil, theta_floor, theta_ceil, edit_frame_length, edit_frame_width, hv_Threshold,hv_Filter_block_radius,hv_closing_radius,baoguang_time, baoguang2_time);
 }
 
 
@@ -1342,7 +1496,64 @@ void CmodbusDlg::JudgeStatus()
 		data_plc = _T("停机");
 	//急停
 	if (StopFlag == true)
-		data_plc = _T("急停");
+		data_stop = _T("急停");
 	if (StopFlag == false)
-		data_plc = _T("没有急停");
+		data_stop = _T("没有急停");
+}
+
+
+void CmodbusDlg::OnBnClickedModBtnOpcam()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CvisionDlg* pVisiondlg = CvisionDlg::pVisiondlg;
+	pVisiondlg->CvisionDlg::OnOpenCam();
+}
+
+
+void CmodbusDlg::OnBnClickedModBtnClosecam()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CvisionDlg* pVisiondlg = CvisionDlg::pVisiondlg;
+	pVisiondlg->CvisionDlg::OnCloseCam();
+}
+
+
+
+
+
+
+
+
+void CmodbusDlg::OnStnClickedStatic14()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CmodbusDlg::OnEnChangeEditType()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，它将不
+	// 发送此通知，除非重写 __super::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+
+	// TODO:  在此添加控件通知处理程序代码
+}
+
+
+void CmodbusDlg::OnBnClickedStatic10()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CmodbusDlg::OnBnClickedStatic11()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CmodbusDlg::OnBnClickedStatic3()
+{
+	// TODO: 在此添加控件通知处理程序代码
 }

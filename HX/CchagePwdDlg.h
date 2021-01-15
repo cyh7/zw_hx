@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "CMyButton.h"
 
 // CchagePwdDlg 对话框
 
@@ -26,4 +26,11 @@ public:
 	CString m_surePwd;
 	afx_msg void OnBnClickedButton1();
 	BOOL PreTranslateMessage(MSG* pMsg);
+	CMyButton m_chg_btn_sure;
+	CMyButton m_chg_btn_cancel;
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnPaint();
+
+	CBrush m_chg_Brush;
+	virtual BOOL OnInitDialog();
 };

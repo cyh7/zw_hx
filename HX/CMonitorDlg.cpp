@@ -408,7 +408,9 @@ void CMonitorDlg::OnTimer(UINT_PTR nIDEvent)
 			}
 
 			UpdateData(FALSE);
+			DeleteObject(m_mon_hBitmapMain);
 		}
+		break;
 	}
 
 	CDialogEx::OnTimer(nIDEvent);

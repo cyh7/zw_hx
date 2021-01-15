@@ -8,9 +8,13 @@
 #include "layoutinitData.h"
 #include "HXDlg.h"
 
+//数据库请求
 bool IsConnOpen = false;
+//数据库连接成功标志位
 bool ConnectSucces = false;
 CdataDlg *CdataDlg::pDatadlg = NULL;
+// 存放数据库记录，最大为100条
+std::vector<std::string> m_dat_data[40000];
 // CdataDlg 对话框
 
 IMPLEMENT_DYNAMIC(CdataDlg, CDialogEx)
@@ -70,16 +74,16 @@ BOOL CdataDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	pDatadlg = this;
 	// TODO:  在此添加额外的初始化
-	m_dat_list.InsertColumn(0, TEXT("日期"), 0, 120);
-	m_dat_list.InsertColumn(1, TEXT("背板型号"), 0, 120);
-	m_dat_list.InsertColumn(2, TEXT("喷涂批次"), 0, 120);
-	m_dat_list.InsertColumn(3, TEXT("X坐标"), 0, 100);
-	m_dat_list.InsertColumn(4, TEXT("Y坐标"), 0, 100);
-	m_dat_list.InsertColumn(5, TEXT("偏转角"), 0, 100);
-	m_dat_list.InsertColumn(6, TEXT("是否良品"), 0, 120);
-	m_dat_list.InsertColumn(7, TEXT("PLC状态"), 0, 120);
-	m_dat_list.InsertColumn(8, TEXT("胶机状态"), 0, 120);
-	m_dat_list.InsertColumn(9, TEXT("急停"), 0, 120);
+	m_dat_list.InsertColumn(0, TEXT("日期"), 0, 190);
+	m_dat_list.InsertColumn(1, TEXT("背板型号"), 0, 100);
+	m_dat_list.InsertColumn(2, TEXT("喷涂批次"), 0, 100);
+	m_dat_list.InsertColumn(3, TEXT("X坐标"), 0, 90);
+	m_dat_list.InsertColumn(4, TEXT("Y坐标"), 0, 90);
+	m_dat_list.InsertColumn(5, TEXT("偏转角"), 0, 90);
+	m_dat_list.InsertColumn(6, TEXT("是否良品"), 0, 100);
+	m_dat_list.InsertColumn(7, TEXT("PLC状态"), 0, 100);
+	m_dat_list.InsertColumn(8, TEXT("胶机状态"), 0, 100);
+	m_dat_list.InsertColumn(9, TEXT("急停"), 0, 80);
 
 	
 
@@ -263,7 +267,8 @@ BOOL CdataDlg::OnInitDialog()
 	////显示数据
 	//ShowInfo();
 
-	SetTimer(1, 10 * 1000, NULL);//每隔10min判断重连一次数据库
+	SetTimer(1, 60 * 1000, NULL);//每隔10min判断重连一次数据库
+	//SetTimer(2, 10 * 1000, NULL);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -314,7 +319,7 @@ void CdataDlg::OnPaint()
 					   // 不为绘图消息调用 CDialogEx::OnPaint()
 }
 
-
+DWORD test_batch = 1;
 void CdataDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
@@ -328,6 +333,24 @@ void CdataDlg::OnTimer(UINT_PTR nIDEvent)
 			}
 		}
 		break;
+	case 2:
+		{
+			CTime curTime;//当前时间
+			curTime = CTime::GetCurrentTime();
+			CString testLastTime = curTime.Format("%Y-%m-%d %H:%M:%S");
+			CString test_plc = _T("测试");
+			CString test_spray = _T("测试");
+			CString test_stop = _T("测试");
+			CString test_good = _T("测试");
+			double test_x = 8.8;
+			double test_y = 8.8;
+			double test_theta = 8.8;
+			
+			CString test_board = _T("测试板");
+			InsertDB(testLastTime, test_board, test_batch, test_x, test_y, test_theta, test_good,
+				test_plc, test_spray, test_stop);
+			test_batch += 1;
+		}
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -346,7 +369,12 @@ BOOL CdataDlg::ConnectDB()
 	return TRUE;*/
 	try
 	{
-		mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0);
+		if (!mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0))
+		{
+			ConnectSucces = false;
+			return false;
+		}
+			
 		ConnectSucces = true;
 	}
 	catch (_com_error)
@@ -365,7 +393,7 @@ BOOL CdataDlg::SelectDB()
 	CString cquery;
 	//条件全部为空则查询所有书籍
 
-	cquery.Format(_T("select * from table1"));
+	cquery.Format(_T("select * from table1 where DATE_SUB(CURDATE(), INTERVAL 6 DAY) <= 日期"));
 	//CString转const char*
 	//const char* query = CString(cquery);
 	//cstring转 const char*
@@ -378,7 +406,8 @@ BOOL CdataDlg::SelectDB()
 	try
 	{
 		//查询数据
-		mysql_query(&m_sqlCon, query); //执行指定为一个空结尾的字符串的SQL查询。
+		if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
+			return false;
 		//获取结果集
 		m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
 
@@ -510,30 +539,41 @@ BOOL CdataDlg::SelectDateDB()
 	m_dat_timeEnd.GetTime(timeEnd);
 	CString sTimeEnd = timeEnd.Format("%H:%M:%S");
 
-
-	cquery.Format(_T("select * from table1 where 日期 >= CONCAT('%s',' ','%s') and 日期 <= CONCAT('%s',' ','%s')"), sYear, sTime, sYearEnd, sTimeEnd);
-	//CString转const char*
-	//const char* query = CString(cquery);
-	//cstring转 const char*
-	const char* query;
-	char temp[1024];
-	::wsprintfA(temp, "%ls", (LPCTSTR)cquery);
-	query = temp;
-	//查询数据
-	//if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
-	//	return FALSE;
-	////获取结果集
-	//m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
-	try
+	int s_day = year.GetDay();
+	int e_day = yearEnd.GetDay();
+	if ((e_day - s_day) >= 7)
 	{
-		mysql_query(&m_sqlCon, query);
-		m_dat_res = mysql_store_result(&m_sqlCon);
+		AfxMessageBox(_T("起始日期和终止日期不能超过7天"));
+		return FALSE;
 	}
-	catch(_com_error)
+	else
 	{
-		IsConnOpen = false;
+		cquery.Format(_T("select * from table1 where 日期 >= CONCAT('%s',' ','%s') and 日期 <= CONCAT('%s',' ','%s')"), sYear, sTime, sYearEnd, sTimeEnd);
+		//CString转const char*
+		//const char* query = CString(cquery);
+		//cstring转 const char*
+		const char* query;
+		char temp[1024];
+		::wsprintfA(temp, "%ls", (LPCTSTR)cquery);
+		query = temp;
+		//查询数据
+		//if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
+		//	return FALSE;
+		////获取结果集
+		//m_dat_res = mysql_store_result(&m_sqlCon); //检索一个完整的结果集合给客户
+		try
+		{
+			if (mysql_query(&m_sqlCon, query)) //执行指定为一个空结尾的字符串的SQL查询。
+				return FALSE;
+			m_dat_res = mysql_store_result(&m_sqlCon);
+		}
+		catch (_com_error)
+		{
+			IsConnOpen = false;
+		}
+		return TRUE;
 	}
-	return TRUE;
+	
 }
 
 BOOL CdataDlg::DeleteDB()
@@ -574,7 +614,8 @@ BOOL CdataDlg::DeleteDB()
 	}*/
 	try
 	{
-		mysql_query(&m_sqlCon, query);
+		if(mysql_query(&m_sqlCon, query))
+			return FALSE;
 	}
 	catch (_com_error )
 	{
@@ -712,7 +753,12 @@ BOOL CdataDlg::InsertDB(CString time, CString type, DWORD batch, double x, doubl
 
 	try
 	{
-		mysql_query(&m_sqlCon, query);
+		if (mysql_query(&m_sqlCon, query))
+		{
+			//AfxMessageBox(TEXT("插入数据失败！"));
+			return FALSE;
+		}
+			
 	}
 	catch (_com_error)
 	{

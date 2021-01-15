@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "CMyButton.h"
 extern bool LoginFlag;
 // CLoginDlg 对话框
 
@@ -31,4 +31,10 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButtonSetpwd();
 	BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnPaint();
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	CBrush m_log_Brush;
+	CMyButton m_log_btn_login;
+	CMyButton m_log_btn_cancel;
+	CMyButton m_log_btn_setpwd;
 };

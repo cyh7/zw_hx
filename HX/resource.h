@@ -11,7 +11,7 @@
 #define IDD_MODBUS                      130
 #define IDD_CAD                         131
 #define IDI_ICON1                       142
-#define IDI_GDUT                        142
+#define IDI_GDUT                        127
 #define IDR_MENU1                       143
 #define IDI_CAD                         144
 #define IDI_MODBUS                      145
@@ -29,6 +29,8 @@
 #define IDI_HIGHBLUE                    161
 #define IDB_BITMAP1                     162
 #define IDB_BITMAP2                     163
+#define IDR_VS_HOT_KEY                  165
+#define IDR_VS_HOTKEY                   166
 #define IDC_TAB1                        1000
 #define IDC_COMBO1                      1001
 #define IDC_COMBO2                      1002
@@ -47,11 +49,13 @@
 #define IDC_BUTTON4                     1016
 #define IDC_BUTTON_CANCEL               1016
 #define IDC_DAT_LIST                    1016
+#define IDC_VS_LIST_LOCATE              1016
 #define IDC_LIST2                       1017
 #define IDC_BUTTON2                     1018
 #define IDC_MOD_BTN_CHANGE              1018
 #define IDC_DAT_BTN_CLEAR               1018
 #define IDC_STATIC1                     1021
+#define IDC_VS_PIC_RIGHT                1021
 #define IDC_STATIC2                     1022
 #define IDC_STATIC3                     1023
 #define IDC_STATIC4                     1024
@@ -64,6 +68,7 @@
 #define IDC_BUTTON3                     1031
 #define IDC_BUTTON_CLEAN                1032
 #define IDC_STATIC_CAD_CHOOSE           1033
+#define IDC_MOD_BTN_CLOSECAM            1033
 #define IDC_BUTTON_CAD_OPEN             1034
 #define IDC_EDIT_CAD_PATH               1035
 #define IDC_BUTTON_CAD_DRAW             1036
@@ -143,6 +148,7 @@
 #define IDC_EDIT_THETAFLOOR             1081
 #define IDC_MON_EDIT_X                  1082
 #define IDC_MOD_PIC_HG                  1082
+#define IDC_STATIC21                    1082
 #define IDC_MON_EDIT_Y                  1083
 #define IDC_EDIT_TYPE5                  1083
 #define IDC_EDIT_THETACEILING           1083
@@ -151,10 +157,15 @@
 #define IDC_MON_STATIC_THETA            1085
 #define IDC_EDIT_XCEILING               1085
 #define IDC_MON_EDIT_THETA              1086
+#define IDC_STATIC22                    1086
 #define IDC_MON_PIC_PLC                 1087
+#define IDC_EDIT_FRAMELENGTH            1087
 #define IDC_MON_PIC_GLUE                1088
+#define IDC_EDIT_FRAMEWIDTH             1088
 #define IDC_MON_PIC_STOP                1089
+#define IDC_STATIC23                    1089
 #define IDC_MON_BTN_OPVS                1090
+#define IDC_EDIT_IMAGETHRESHOLD         1090
 #define IDC_MON_BTN_OPCAD               1091
 #define IDC_MON_BTN_OPDATA              1092
 #define IDC_MON_BTN_OPMOD               1093
@@ -165,15 +176,29 @@
 #define IDC_MON_STATIC_NAME             1097
 #define IDC_MOD_STATIC_NAME             1098
 #define IDC_DAT_STATIC2                 1099
+#define IDC_STATIC26                    1099
+#define IDC_EDIT_BAOGUANG               1100
 #define IDC_DAT_STATIC1                 1101
+#define IDC_STATIC24                    1101
 #define IDC_HX_PIC_MAIN                 1102
+#define IDC_EDIT_Filter_radius          1102
 #define IDC_MON_PIC_MAIN                1103
+#define IDC_STATIC25                    1103
 #define IDC_MOD_PIC_LOGO                1104
 #define IDC_MON_PIC_LOGO                1105
+#define IDC_EDIT_IMAGE_close_radius     1105
 #define IDC_VS_PIC_LOGO                 1106
+#define IDC_STATIC27                    1106
 #define IDC_DATA_PIC_LOGO               1107
+#define IDC_EDIT_BAOGUANG2              1107
 #define IDC_CAD_PIC_LOGO                1108
 #define IDC_VS_BTN_RESEND               1109
+#define IDC_MOD_BTN_OPCAM               1110
+#define IDC_VS_EDIT_TYPE                1111
+#define IDC_VS_STATIC_TYPE              1112
+#define IDC_VS_STATIC_BATCH             1113
+#define IDC_VS_EDIT_BATCH               1114
+#define IDC_VS_PIC_LEFT                 1115
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -191,14 +216,23 @@
 #define ID_32791                        32791
 #define ID_MENU_LOGIN                   32792
 #define ID_MENU_EXIT                    32793
+#define ID_VS_HOTKEY_LEFT_UP            32796
+#define ID_VS_HOTKEY_LEFT_DOWN          32797
+#define ID_VS_HOTKEY_LEFT_LEFT          32798
+#define ID_VS_HOTKEY_LEFT_RIGHT         32799
+#define ID_VS_HOTKEY_RIGHT_UP           32800
+#define ID_VS_HOTKEY_RIGHT_DOWN         32801
+#define ID_VS_HOTKEY_RIGHT_LEFT         32802
+#define ID_VS_HOTKEY_RIGHT_RIGHT        32803
+#define ID_32805                        32805
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        164
-#define _APS_NEXT_COMMAND_VALUE         32794
-#define _APS_NEXT_CONTROL_VALUE         1110
+#define _APS_NEXT_RESOURCE_VALUE        167
+#define _APS_NEXT_COMMAND_VALUE         32806
+#define _APS_NEXT_CONTROL_VALUE         1116
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

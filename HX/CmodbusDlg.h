@@ -9,7 +9,7 @@ using namespace itas109;
 
 
 
-extern int SendGlueNum;
+
 
 extern bool RecMsgFlag;
 
@@ -51,10 +51,16 @@ extern bool PlcFlag;
 extern bool StopFlag;
 //通信状态
 extern bool DisconnectFlag;
+//是否可写 初始值为可以写入
+extern bool PlcCadWriteFlag;
+//PLC是否收完发送的cad图纸数据，初始值为false
+extern bool PlcCadRecFlag;
+//通信关闭
+extern bool ConnectClose;
 extern int DisconnectNum;
 //防止识别完成后重复插入，识别完置0；插入完成置1
 extern int insertdata;
-
+extern bool exitFlag;
 
 // CmodbusDlg 对话框
 
@@ -154,4 +160,22 @@ public:
 
 	CFont f_mod_font;
 	CFont f_mod_name;
+	int m_mod_edit_frame_length;
+	int m_mod_edit_frame_width;
+	CMyButton m_mod_btn_timesend;
+	CMyButton m_mod_btn_opcam;
+	CMyButton m_mod_btn_closecam;
+	afx_msg void OnBnClickedModBtnOpcam();
+	afx_msg void OnBnClickedModBtnClosecam();
+	int m_mod_edit_imagethreshold;
+	
+	int m_mod_edit_image_filter_radius;
+	int m_mod_edit_image_close_radius;
+	afx_msg void OnStnClickedStatic14();
+	afx_msg void OnEnChangeEditType();
+	int m_mod_edit_baoguang;
+	afx_msg void OnBnClickedStatic10();
+	afx_msg void OnBnClickedStatic11();
+	afx_msg void OnBnClickedStatic3();
+	int m_mod_baoguang2;
 };
