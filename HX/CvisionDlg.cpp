@@ -23,7 +23,8 @@ int BadVisionNum = 0;
 int LocVisionNum = 0;
 //判断是否识别完成
 bool IdentifyDone = false;
-
+//识别错误次数
+int IdentifyWrongNum = 0;
 //上一次时间
 CString LastTime;
 //插入数据库时的字符串
@@ -666,8 +667,6 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 				//Send()  发送喷胶判断
 				if (IdentifyDone == false)
 				{
-
-
 					/*
 					识别完成的时候就把数据读到容器里
 					其实就三个数据可以换个方式
@@ -681,82 +680,62 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 					//程序识别完之后，直接开始settimer
 					SetTimer(2,30,Null);
 					*/
-
 					OnCollectAndLocate();//采集图像并定位
 					//识别出来的情况
-					/*if (Row_l != -1 && Row_r != -1)
-					{*/
-
-					KillTimer(1); //先终止该定时器，进行视觉处理
-					Sleep(50);
-					vs_x = Row_l;
-					vs_y = Column_l;
-					vs_theta = Angle_l;
-					result[0] = row_l;
-					result[1] = column_l;
-					result[2] = angle_l;
-					/*result[0] = 500;
-					result[1] = 500;
-					result[2] = 0;*/
-
-
-
-					////CTime curTime = CTime().GetCurrentTime();//当前时间
-					////LastTime = preTime.Format("%Y-%m-%d %H:%M:%S");
-					
-					if ((vs_x >= x_floor && vs_x <= x_ceil) && (vs_y >= x_floor && vs_y <= y_ceil) && (vs_theta >= theta_floor && vs_theta <= theta_ceil))
+					if (Row_l != -1 && Row_r != -1)
 					{
-						data_good = _T("良品");
+
+						KillTimer(1); //先终止该定时器，进行视觉处理
+						vs_x = Row_l;
+						vs_y = Column_l;
+						vs_theta = Angle_l;
+						result[0] = row_l;
+						result[1] = column_l;
+						result[2] = angle_l;
+						/*result[0] = 500;
+						result[1] = 500;
+						result[2] = 0;*/
+
+						if ((vs_x >= x_floor && vs_x <= x_ceil) && (vs_y >= x_floor && vs_y <= y_ceil) && (vs_theta >= theta_floor && vs_theta <= theta_ceil))
+						{
+							data_good = _T("良品");
+						}
+						else
+						{
+							data_good = _T("非良品");
+						}
+						IdentifyDone = true;
+						insertdata = 0;
+						SprayBatch += 1;
+						//执行视觉识别程序 产生三个坐标，
+						//执行发送函数  这里的发送函数应该是启动定时器2
+						/*SetTimer(1, 100, NULL);
+						IdentifyDone = true;*/
+						SetTimer(2, 50, NULL);
 					}
-					else
+					else//没识别出来
 					{
-						data_good = _T("非良品");
+						if (IdentifyWrongNum < 2)
+						{
+							OnCollectAndLocate();
+							if (Row_l == -1 || Row_r == -1)
+							{
+								IdentifyWrongNum += 1;
+							}
+							else
+							{
+								IdentifyWrongNum = 0;
+							}
+							
+						}
+						else
+						{
+							//SendData();
+							//KillTimer
+							IdentifyWrongNum = 0;
+							AfxMessageBox(_T("视觉定位失败"));
+						}
 					}
-
-					insertdata = 0;
-					SprayBatch += 1;
-					//执行视觉识别程序 产生三个坐标，
-					//执行发送函数  这里的发送函数应该是启动定时器2
-					/*SetTimer(1, 100, NULL);
-					IdentifyDone = true;*/
-					SetTimer(2, 50, NULL);
-					//}
-
-					//else//没识别出来
-					//{
-					//	//sleep
-					//	//给轩举发一个指令 跳过这个版
-					//	//这个版依旧可以插入数据库
-					//	vs_x = Row_l;
-					//	vs_y = Column_l;
-					//	vs_theta = Angle_l;
-					//	data_good = _T("非良品");
-					//	SprayBatch += 1;
-					//	insertdata = 0;
-					//	IdentifyDone = true; //进来一次
-					//}
-
-					//if (SprayBatch > 0)
-					//{
-					//	
-					//	
-					//	LastTime;
-					//	SprayBatch;
-					//	backboard;
-					//	vs_x;
-					//	vs_y;
-					//	vs_theta;
-					//	
-					//	//插入数据库,插入(LastTime  1
-					//	//这里判断四个flag 生成四个CString 
-					//	//能进来就说明当前是正常的  要不通信状态不插入数据库
-					//	//上一次的坐标对比设置 CString 良与不良  7 8 9 10
-					//	//背板型号 2
-					//	//喷涂批次就是当前的SprayBatch 3
-					//	//X Y theta坐标   4 5 6
-					//}
-					//preTime = curTime;
-
 
 				}
 			}
@@ -836,12 +815,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 	case 3:
 	{
-		/*SendData();
-		if ()
-		{
-			SetTimer(1, 100, NULL);
-		}
-		break;*/
+		
 	}
 	}
 	CDialogEx::OnTimer(nIDEvent);
