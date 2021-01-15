@@ -239,13 +239,14 @@ BOOL CHXDlg::OnInitDialog()
 	m_Dlg3.ShowWindow(SW_HIDE);
 	m_Dlg5.Create(IDD_DATABASE);
 	m_Dlg5.ShowWindow(SW_HIDE);
-	m_Dlg1.Create(IDD_VISION);
-	m_Dlg1.ShowWindow(SW_HIDE);
 	m_Dlg2.Create(IDD_CAD);
 	m_Dlg2.ShowWindow(SW_HIDE);
 	
+	
 	m_Dlg4.Create(IDD_MONITOR);
 	m_Dlg4.ShowWindow(SW_HIDE);
+	m_Dlg1.Create(IDD_VISION);
+	m_Dlg1.ShowWindow(SW_HIDE);
 	
 	//背景颜色画刷
 	m_HX_Brush.CreateSolidBrush(RGB(240, 240, 220));

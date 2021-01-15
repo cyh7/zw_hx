@@ -1,4 +1,4 @@
-﻿// CvisionDlg.cpp: 实现文件
+// CvisionDlg.cpp: 实现文件
 //
 
 #include "pch.h"
@@ -710,7 +710,6 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 					SetTimer(2,30,Null);
 					*/
 					OnCollectAndLocate();//采集图像并定位
-					
 					//识别出来的情况
 					if (Row_l != -1 && Row_r != -1)
 					{
@@ -734,7 +733,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						{
 							data_good = _T("非良品");
 						}
-						//IdentifyDone = true;
+						IdentifyDone = true;
 						insertdata = 0;
 						SprayBatch += 1;
 						
@@ -858,7 +857,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 				{
 					data_good = _T("非良品");
 				}
-				//IdentifyDone = true;
+				IdentifyDone = true;
 				insertdata = 0;
 				SprayBatch += 1;
 
@@ -872,11 +871,9 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 			//KillTimer(1);
 			//这个标志位只用于测验时,防止重复
 			IdentifyDone = true;
-			insertdata = 1;
 			IdentifyWrongNum = 0;
 			AfxMessageBox(_T("视觉定位失败"));
 		}
-		break;
 	}
 	}
 	CDialogEx::OnTimer(nIDEvent);

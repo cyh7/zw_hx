@@ -369,7 +369,7 @@ BOOL CdataDlg::ConnectDB()
 	return TRUE;*/
 	try
 	{
-		if (!mysql_real_connect(&m_sqlCon, "localhost", "root", "123", "test", 3306, NULL, 0))
+		if (!mysql_real_connect(&m_sqlCon, "localhost", "root", "1234", "test", 3306, NULL, 0))
 		{
 			ConnectSucces = false;
 			return false;
