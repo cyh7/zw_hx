@@ -731,11 +731,14 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						else
 						{
 							//SendData();
-							//KillTimer
+							//KillTimer(1);
+
+							//IdentifyDone = true;
 							IdentifyWrongNum = 0;
 							AfxMessageBox(_T("视觉定位失败"));
 						}
 					}
+
 
 				}
 			}
@@ -1052,6 +1055,7 @@ void CvisionDlg::KillTime1()
 {
 	// TODO: 在此处添加实现代码.
 	DisconnectNum = 0;
+	IdentifyWrongNum = 0;
 	KillTimer(1);
 }
 

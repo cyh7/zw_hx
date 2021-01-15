@@ -179,11 +179,11 @@ BEGIN_MESSAGE_MAP(CmodbusDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_MOD_BTN_OPMON, &CmodbusDlg::OnBnClickedModBtnOpmon)
 	ON_BN_CLICKED(IDC_MOD_BTN_OPCAM, &CmodbusDlg::OnBnClickedModBtnOpcam)
 	ON_BN_CLICKED(IDC_MOD_BTN_CLOSECAM, &CmodbusDlg::OnBnClickedModBtnClosecam)
-	ON_STN_CLICKED(IDC_STATIC14, &CmodbusDlg::OnStnClickedStatic14)
-	ON_EN_CHANGE(IDC_EDIT_TYPE, &CmodbusDlg::OnEnChangeEditType)
-	ON_BN_CLICKED(IDC_STATIC10, &CmodbusDlg::OnBnClickedStatic10)
-	ON_BN_CLICKED(IDC_STATIC11, &CmodbusDlg::OnBnClickedStatic11)
-	ON_BN_CLICKED(IDC_STATIC3, &CmodbusDlg::OnBnClickedStatic3)
+	
+
+	
+
+
 END_MESSAGE_MAP()
 
 
@@ -1301,14 +1301,11 @@ void CmodbusDlg::OnTimer(UINT_PTR nIDEvent)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	switch (nIDEvent)
 	{
-		//一直读200ms，为true到位，false则不到位
-		//到位之后就可以发送尺寸数据
+		
 
 		case 1:
 		{
-			SendOnce = true;
-			SendData(0, 95, 1);
-
+			
 
 			break;
 		}
@@ -1354,8 +1351,7 @@ void CmodbusDlg::OnBnClickedButtonClean()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_EditReceive = _T("");
-	/*m_EditReceive = _T("");
-	UpdateData(FALSE);*/
+
 	UpdateData(FALSE);
 }
 
@@ -1467,7 +1463,8 @@ void CmodbusDlg::OnBnClickedModBtnChange()
 		pVisiondlg->CvisionDlg::OnOpenCam();
 	}
 
-	file.WirteDocline(backboard, x_floor, x_ceil, y_floor, y_ceil, theta_floor, theta_ceil, edit_frame_length, edit_frame_width, hv_Threshold,hv_Filter_block_radius,hv_closing_radius,baoguang_time, baoguang2_time);
+	file.WirteDocline(backboard, x_floor, x_ceil, y_floor, y_ceil, theta_floor, theta_ceil,
+		edit_frame_length, edit_frame_width, hv_Threshold,hv_Filter_block_radius,hv_closing_radius,baoguang_time, baoguang2_time);
 }
 
 
@@ -1524,36 +1521,16 @@ void CmodbusDlg::OnBnClickedModBtnClosecam()
 
 
 
-void CmodbusDlg::OnStnClickedStatic14()
-{
-	// TODO: 在此添加控件通知处理程序代码
-}
 
 
-void CmodbusDlg::OnEnChangeEditType()
-{
-	// TODO:  如果该控件是 RICHEDIT 控件，它将不
-	// 发送此通知，除非重写 __super::OnInitDialog()
-	// 函数并调用 CRichEditCtrl().SetEventMask()，
-	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
-
-	// TODO:  在此添加控件通知处理程序代码
-}
 
 
-void CmodbusDlg::OnBnClickedStatic10()
-{
-	// TODO: 在此添加控件通知处理程序代码
-}
 
 
-void CmodbusDlg::OnBnClickedStatic11()
-{
-	// TODO: 在此添加控件通知处理程序代码
-}
 
 
-void CmodbusDlg::OnBnClickedStatic3()
-{
-	// TODO: 在此添加控件通知处理程序代码
-}
+
+
+
+
+

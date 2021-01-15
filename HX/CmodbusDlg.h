@@ -171,11 +171,6 @@ public:
 	
 	int m_mod_edit_image_filter_radius;
 	int m_mod_edit_image_close_radius;
-	afx_msg void OnStnClickedStatic14();
-	afx_msg void OnEnChangeEditType();
 	int m_mod_edit_baoguang;
-	afx_msg void OnBnClickedStatic10();
-	afx_msg void OnBnClickedStatic11();
-	afx_msg void OnBnClickedStatic3();
 	int m_mod_baoguang2;
 };
