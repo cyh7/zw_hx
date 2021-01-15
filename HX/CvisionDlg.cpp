@@ -868,11 +868,12 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 		else//三次都没识别出的话
 		{
+			KillTimer(3); //先终止该定时器，进行视觉处理
 			SendData(1, 73, 666);
 			//KillTimer(1);
 			//这个标志位只用于测验时,防止重复
-			IdentifyDone = true;
-			insertdata = 1;
+			//IdentifyDone = true;
+			//insertdata = 1;
 			IdentifyWrongNum = 0;
 			AfxMessageBox(_T("视觉定位失败"));
 		}
@@ -1741,15 +1742,15 @@ int locateright()
 }
 void CvisionDlg::OnCollectAndLocate()
 {
-	long t1, t2, t3;
-	t1 = GetTickCount64();
+	//long t1, t2, t3;
+	//t1 = GetTickCount64();
 	// TODO: 在此处添加实现代码.
 	CString str;
 	// TODO: 在此添加控件通知处理程序代码
 	locateleft();
 
-	t2 = GetTickCount64();
-	str.Format(L"time:%dms", t2 - t1);
+	//t2 = GetTickCount64();
+	//str.Format(L"time:%dms", t2 - t1);
 	locateright();
 	//AfxBeginThread(*locateleft, NULL);
 
@@ -2044,7 +2045,7 @@ void CvisionDlg::OnCollectAndLocate()
 	//OnRightBmpSaveAndShow();
 
 
-	AfxMessageBox(str);
+	//AfxMessageBox(str);
 	//如果定位失败,跳出循环,提示重新画框,画完框之后再进入循环
 	DeleteObject(hBmp);
 	DeleteObject(hBmp_r);

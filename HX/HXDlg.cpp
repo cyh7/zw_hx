@@ -851,7 +851,7 @@ void CHXDlg::OnExitHX()
 {
 	// TODO: 在此添加命令处理程序代码
 	exitFlag = true;
-	Sleep(50);
+	//Sleep(50);
 	CmodbusDlg* pdlg = CmodbusDlg::pModbusdlg;
 	pdlg->OnClose();
 	Sleep(50);
