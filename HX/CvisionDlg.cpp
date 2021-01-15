@@ -732,8 +732,8 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						{
 							//SendData();
 							//KillTimer(1);
-
-							//IdentifyDone = true;
+							//这个标志位只用于测验时,防止重复
+							IdentifyDone = true;
 							IdentifyWrongNum = 0;
 							AfxMessageBox(_T("视觉定位失败"));
 						}
