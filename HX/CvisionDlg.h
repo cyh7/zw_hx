@@ -79,6 +79,9 @@ public:
 	CFont f_vs_font;
 	CFont f_vs_name;
 	CMyButton m_vs_btn_resend;
+
+	CMyButton m_vs_btn_neikuang;
+	CMyButton m_vs_btn_waikuang;
 	afx_msg void OnBnClickedVsBtnResend();
 	// 停止定时器1
 	void KillTime1();
@@ -114,4 +117,6 @@ public:
 	void Show_location_result();
 	void OnLeftBmpSaveAndShow();
 	void OnRightBmpSaveAndShow();
+	afx_msg void OnBnClickedVsButtonNeikuang();
+	afx_msg void OnBnClickedVsButtonWaikuang();
 };

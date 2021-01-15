@@ -29,6 +29,8 @@ int IdentifyWrongNum = 0;
 CString LastTime;
 //插入数据库时的字符串
 
+bool zhuaneikuang_flag;
+bool zhuawaikuang_flag;
 //double x y theta
 //X Y Theta
 float result[3];
@@ -140,6 +142,8 @@ void CvisionDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VS_PIC_LEFT, m_vs_pic_left);
 	DDX_Control(pDX, IDC_VS_PIC_RIGHT, m_vs_pic_right);
 	DDX_Control(pDX, IDC_VS_LIST_LOCATE, m_vs_list_location_data);
+	DDX_Control(pDX, IDC_VS_BUTTON_NEIKUANG, m_vs_btn_neikuang);
+	DDX_Control(pDX, IDC_VS_BUTTON_WAIKUANG, m_vs_btn_waikuang);
 }
 
 
@@ -166,6 +170,8 @@ BEGIN_MESSAGE_MAP(CvisionDlg, CDialogEx)
 	ON_COMMAND(ID_VS_HOTKEY_RIGHT_RIGHT, &CvisionDlg::OnVsHotkeyRightRight)
 	ON_COMMAND(ID_VS_HOTKEY_RIGHT_UP, &CvisionDlg::OnVsHotkeyRightUp)
 	ON_BN_CLICKED(IDC_VIS_BTN_OPVS, &CvisionDlg::OnBnClickedVisBtnOpvs)
+	ON_BN_CLICKED(IDC_VS_BUTTON_NEIKUANG, &CvisionDlg::OnBnClickedVsButtonNeikuang)
+	ON_BN_CLICKED(IDC_VS_BUTTON_WAIKUANG, &CvisionDlg::OnBnClickedVsButtonWaikuang)
 END_MESSAGE_MAP()
 
 
@@ -173,7 +179,8 @@ END_MESSAGE_MAP()
 BOOL CvisionDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
+	zhuaneikuang_flag = false;
+	zhuawaikuang_flag = true;
 	// TODO:  在此添加额外的初始化
 	m_hAccel = ::LoadAccelerators(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_VS_HOTKEY));//初始化快捷键
 
@@ -252,6 +259,28 @@ BOOL CvisionDlg::OnInitDialog()
 		m_vs_btn_resend.setWordColor(RGB(255, 250, 250));
 		//设置字体大小
 		m_vs_btn_resend.setWordSize(200);
+
+
+		GetDlgItem(IDC_VS_BUTTON_WAIKUANG)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_vs_btn_waikuang.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_vs_btn_waikuang.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_vs_btn_waikuang.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_vs_btn_waikuang.setWordSize(200);
+
+
+		GetDlgItem(IDC_VS_BUTTON_NEIKUANG)->ModifyStyle(0, BS_OWNERDRAW, 0);
+		//设置Button Down的背景色，SetDownColor()和SetUpnColor()是CMyButton类中的析构函数
+		m_vs_btn_neikuang.SetDownColor(RGB(102, 139, 139));
+		//设置Button Up的背景色
+		m_vs_btn_neikuang.SetUpColor(RGB(2, 158, 160));
+		//设置字体颜色
+		m_vs_btn_neikuang.setWordColor(RGB(255, 250, 250));
+		//设置字体大小
+		m_vs_btn_neikuang.setWordSize(200);
 	}
 	//改变字体
 	{
@@ -684,7 +713,7 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 					//识别出来的情况
 					if (Row_l != -1 && Row_r != -1)
 					{
-
+						
 						KillTimer(1); //先终止该定时器，进行视觉处理
 						vs_x = Row_l;
 						vs_y = Column_l;
@@ -707,36 +736,15 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 						IdentifyDone = true;
 						insertdata = 0;
 						SprayBatch += 1;
-						//执行视觉识别程序 产生三个坐标，
-						//执行发送函数  这里的发送函数应该是启动定时器2
-						/*SetTimer(1, 100, NULL);
-						IdentifyDone = true;*/
+						
 						SetTimer(2, 50, NULL);
 					}
 					else//没识别出来
 					{
-						if (IdentifyWrongNum < 2)
-						{
-							OnCollectAndLocate();
-							if (Row_l == -1 || Row_r == -1)
-							{
-								IdentifyWrongNum += 1;
-							}
-							else
-							{
-								IdentifyWrongNum = 0;
-							}
-							
-						}
-						else
-						{
-							//SendData();
-							//KillTimer(1);
-							//这个标志位只用于测验时,防止重复
-							IdentifyDone = true;
-							IdentifyWrongNum = 0;
-							AfxMessageBox(_T("视觉定位失败"));
-						}
+						IdentifyWrongNum = 0;
+						KillTimer(1);
+						SetTimer(3, 100, NULL);
+						
 					}
 
 
@@ -819,6 +827,53 @@ void CvisionDlg::OnTimer(UINT_PTR nIDEvent)
 	case 3:
 	{
 		
+		if (IdentifyWrongNum < 2)
+		{
+			OnCollectAndLocate();
+			if (Row_l == -1 || Row_r == -1)//没识别出来
+			{
+				//错误次数加一
+				IdentifyWrongNum += 1;
+			}
+			else//识别出来
+			{
+				IdentifyWrongNum = 0;
+				KillTimer(3); //先终止该定时器，进行视觉处理
+				vs_x = Row_l;
+				vs_y = Column_l;
+				vs_theta = Angle_l;
+				result[0] = row_l;
+				result[1] = column_l;
+				result[2] = angle_l;
+				/*result[0] = 500;
+				result[1] = 500;
+				result[2] = 0;*/
+
+				if ((vs_x >= x_floor && vs_x <= x_ceil) && (vs_y >= x_floor && vs_y <= y_ceil) && (vs_theta >= theta_floor && vs_theta <= theta_ceil))
+				{
+					data_good = _T("良品");
+				}
+				else
+				{
+					data_good = _T("非良品");
+				}
+				IdentifyDone = true;
+				insertdata = 0;
+				SprayBatch += 1;
+
+				SetTimer(2, 50, NULL);
+			}
+
+		}
+		else//三次都没识别出的话
+		{
+			SendData(1, 73, 666);
+			//KillTimer(1);
+			//这个标志位只用于测验时,防止重复
+			IdentifyDone = true;
+			IdentifyWrongNum = 0;
+			AfxMessageBox(_T("视觉定位失败"));
+		}
 	}
 	}
 	CDialogEx::OnTimer(nIDEvent);
@@ -1148,55 +1203,58 @@ int locateleft()
 	Connection(ho_Regions, &ho_ConnectedRegions);
 	SelectShapeStd(ho_ConnectedRegions, &ho_SelectedRegions, "max_area", 70);
 
-	Boundary(ho_SelectedRegions, &ho_RegionBorder, "inner");
-	//*膨胀
-	DilationCircle(ho_RegionBorder, &ho_RegionDilation, 2.5);
-	RegionToBin(ho_RegionDilation, &ho_BinImage, 255, 0, hv_Width, hv_Height);
-
-	//在弧形区域进行边缘检测
-	EdgesSubPix(ho_BinImage, &ho_Edges, "canny", 1, 20, 40);
-	//分割边缘：线和圆
-	//对检测的边缘进行分割，识别线或者圆'lines_circles'，
-	SegmentContoursXld(ho_Edges, &ho_RegionDilation, "lines_circles", 5, 5, 8);
-	//统计识别出圆或线的数量
-	CountObj(ho_RegionDilation, &hv_Number);
-	//储存拟合圆的圆心坐标和半径
-	hv_ROW = HTuple();
-	hv_COL = HTuple();
-	hv_Rad = HTuple();
-	hv_n = 0;
+	if(zhuaneikuang_flag==true)
 	{
-		HTuple end_val40 = hv_Number;
-		HTuple step_val40 = 1;
-		for (hv_i = 1; hv_i.Continue(end_val40, step_val40); hv_i += step_val40)
-		{
+		Boundary(ho_SelectedRegions, &ho_RegionBorder, "inner");
+		//*膨胀
+		DilationCircle(ho_RegionBorder, &ho_RegionDilation, 2.5);
+		RegionToBin(ho_RegionDilation, &ho_BinImage, 255, 0, hv_Width, hv_Height);
 
-			//选择轮廓并根据特性确定是否拟合圆：* Attrib = -1 线段 0 椭圆 1圆
-			SelectObj(ho_RegionDilation, &ho_ObjectSelected, hv_i);
-			GetContourGlobalAttribXld(ho_ObjectSelected, "cont_approx", &hv_Attrib);
-			if (0 != (hv_Attrib > 0))
+		//在弧形区域进行边缘检测
+		EdgesSubPix(ho_BinImage, &ho_Edges, "canny", 1, 20, 40);
+		//分割边缘：线和圆
+		//对检测的边缘进行分割，识别线或者圆'lines_circles'，
+		SegmentContoursXld(ho_Edges, &ho_RegionDilation, "lines_circles", 5, 5, 8);
+		//统计识别出圆或线的数量
+		CountObj(ho_RegionDilation, &hv_Number);
+		//储存拟合圆的圆心坐标和半径
+		hv_ROW = HTuple();
+		hv_COL = HTuple();
+		hv_Rad = HTuple();
+		hv_n = 0;
+		{
+			HTuple end_val40 = hv_Number;
+			HTuple step_val40 = 1;
+			for (hv_i = 1; hv_i.Continue(end_val40, step_val40); hv_i += step_val40)
 			{
-				//逼近结果生成一个圆轮廓
-				FitCircleContourXld(ho_ObjectSelected, "ahuber", -1, 2, 0, 3, 2, &hv_Row, &hv_Column,
-					&hv_Radius, &hv_StartPhi, &hv_EndPhi, &hv_PointOrder);
-				//这里会生成大量的拟合圆，通过添加条件，选取自己需要的圆，这里
-				//条件为半径，（可以自己注释条件，查看所有拟合圆结果 ）
-				if (0 != (HTuple(hv_Radius < 100).TupleAnd(hv_Radius > 10)))
+
+				//选择轮廓并根据特性确定是否拟合圆：* Attrib = -1 线段 0 椭圆 1圆
+				SelectObj(ho_RegionDilation, &ho_ObjectSelected, hv_i);
+				GetContourGlobalAttribXld(ho_ObjectSelected, "cont_approx", &hv_Attrib);
+				if (0 != (hv_Attrib > 0))
 				{
-					//生成轮廓
-					GenCircleContourXld(&ho_ContCircle, hv_Row, hv_Column, hv_Radius, 0, HTuple(360).TupleRad(),
-						"positive", 1.0);
-					//记录圆的圆心坐标和半径信息
-					hv_ROW[hv_n] = hv_Row;
-					hv_COL[hv_n] = hv_Column;
-					hv_Rad[hv_n] = hv_Radius;
-					hv_n += 1;
-					if (HDevWindowStack::IsOpen())
-						DispObj(ho_ContCircle, HDevWindowStack::GetActive());
-					GenRegionContourXld(ho_ContCircle, &ho_Region, "filled");
-					DilationCircle(ho_Region, &ho_RegionDilation1, 5.5);
-					Difference(ho_SelectedRegions, ho_RegionDilation1, &ho_RegionDifference);
-					ho_SelectedRegions = ho_RegionDifference;
+					//逼近结果生成一个圆轮廓
+					FitCircleContourXld(ho_ObjectSelected, "ahuber", -1, 2, 0, 3, 2, &hv_Row, &hv_Column,
+						&hv_Radius, &hv_StartPhi, &hv_EndPhi, &hv_PointOrder);
+					//这里会生成大量的拟合圆，通过添加条件，选取自己需要的圆，这里
+					//条件为半径，（可以自己注释条件，查看所有拟合圆结果 ）
+					if (0 != (HTuple(hv_Radius < 100).TupleAnd(hv_Radius > 10)))
+					{
+						//生成轮廓
+						GenCircleContourXld(&ho_ContCircle, hv_Row, hv_Column, hv_Radius, 0, HTuple(360).TupleRad(),
+							"positive", 1.0);
+						//记录圆的圆心坐标和半径信息
+						hv_ROW[hv_n] = hv_Row;
+						hv_COL[hv_n] = hv_Column;
+						hv_Rad[hv_n] = hv_Radius;
+						hv_n += 1;
+						if (HDevWindowStack::IsOpen())
+							DispObj(ho_ContCircle, HDevWindowStack::GetActive());
+						GenRegionContourXld(ho_ContCircle, &ho_Region, "filled");
+						DilationCircle(ho_Region, &ho_RegionDilation1, 5.5);
+						Difference(ho_SelectedRegions, ho_RegionDilation1, &ho_RegionDifference);
+						ho_SelectedRegions = ho_RegionDifference;
+					}
 				}
 			}
 		}
@@ -1241,23 +1299,23 @@ int locateleft()
 			a = hv_ColEnd[0].D();
 		else
 			a = hv_ColBegin[0].D();
-		if (hv_RowBegin1[1] > hv_RowEnd1[1])
-			b = hv_RowEnd1[1].D();
+		if (hv_ColBegin[1] > hv_ColEnd[1])
+			b = hv_ColEnd[1].D();
 		else
-			b = hv_RowBegin1[1].D();//发
+			b = hv_ColBegin[1].D();
 		if (a < b)
 		{
-			hv_RowBegin1 = hv_RowBegin1[0].D();
-			hv_ColBegin1 = hv_ColBegin1[0].D();
-			hv_RowEnd1 = hv_RowEnd1[0].D();
-			hv_ColEnd1 = hv_ColEnd1[0].D();
+			hv_RowBegin = hv_RowBegin[0].D();
+			hv_ColBegin = hv_ColBegin[0].D();
+			hv_RowEnd = hv_RowEnd[0].D();
+			hv_ColEnd = hv_ColEnd[0].D();
 		}
 		else
 		{
-			hv_RowBegin1 = hv_RowBegin1[1].D();
-			hv_ColBegin1 = hv_ColBegin1[1].D();
-			hv_RowEnd1 = hv_RowEnd1[1].D();
-			hv_ColEnd1 = hv_ColEnd1[1].D();
+			hv_RowBegin = hv_RowBegin[1].D();
+			hv_ColBegin = hv_ColBegin[1].D();
+			hv_RowEnd = hv_RowEnd[1].D();
+			hv_ColEnd = hv_ColEnd[1].D();
 		}
 	}
 	
@@ -1447,25 +1505,26 @@ int locateright()
 
 	Connection(ho_Regions, &ho_ConnectedRegions);
 	SelectShapeStd(ho_ConnectedRegions, &ho_SelectedRegions, "max_area", 70);
-
-	Boundary(ho_SelectedRegions, &ho_RegionBorder, "inner");
-	//*膨胀
-	DilationCircle(ho_RegionBorder, &ho_RegionDilation, 2.5);
-	RegionToBin(ho_RegionDilation, &ho_BinImage, 255, 0, hv_Width, hv_Height);
-
-	//在弧形区域进行边缘检测
-	EdgesSubPix(ho_BinImage, &ho_Edges, "canny", 1, 20, 40);
-	//分割边缘：线和圆
-	//对检测的边缘进行分割，识别线或者圆'lines_circles'，
-	SegmentContoursXld(ho_Edges, &ho_RegionDilation, "lines_circles", 5, 5, 8);
-	//统计识别出圆或线的数量
-	CountObj(ho_RegionDilation, &hv_Number);
-	//储存拟合圆的圆心坐标和半径
-	hv_ROW = HTuple();
-	hv_COL = HTuple();
-	hv_Rad = HTuple();
-	hv_n = 0;
+	if (zhuaneikuang_flag)
 	{
+		Boundary(ho_SelectedRegions, &ho_RegionBorder, "inner");
+		//*膨胀
+		DilationCircle(ho_RegionBorder, &ho_RegionDilation, 2.5);
+		RegionToBin(ho_RegionDilation, &ho_BinImage, 255, 0, hv_Width, hv_Height);
+
+		//在弧形区域进行边缘检测
+		EdgesSubPix(ho_BinImage, &ho_Edges, "canny", 1, 20, 40);
+		//分割边缘：线和圆
+		//对检测的边缘进行分割，识别线或者圆'lines_circles'，
+		SegmentContoursXld(ho_Edges, &ho_RegionDilation, "lines_circles", 5, 5, 8);
+		//统计识别出圆或线的数量
+		CountObj(ho_RegionDilation, &hv_Number);
+		//储存拟合圆的圆心坐标和半径
+		hv_ROW = HTuple();
+		hv_COL = HTuple();
+		hv_Rad = HTuple();
+		hv_n = 0;
+	
 		HTuple end_val40 = hv_Number;
 		HTuple step_val40 = 1;
 		for (hv_i = 1; hv_i.Continue(end_val40, step_val40); hv_i += step_val40)
@@ -1528,14 +1587,41 @@ int locateright()
 	TupleLength(hv_RowBegin, &hv_Length);
 	//检查识别出了几条直线
 
-	if (hv_Length !=1)
+	if (hv_Length ==0|| hv_Length>2)
 	{
 		check_r_over = 0;
 		empty_location_data();
 		AfxMessageBox(_T("右边没找到横直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域!"));
 		return 0;
 	}
-	
+	if (hv_Length == 2)
+	{
+		int a, b;
+		if (hv_ColBegin[0] < hv_ColEnd[0])
+			a = hv_ColEnd[0].D();
+		else
+			a = hv_ColBegin[0].D();
+		if (hv_ColBegin[1] < hv_ColEnd[1])
+			b = hv_ColEnd[1].D();
+		else
+			b = hv_ColBegin[1].D();
+		if (a > b)
+		{
+			hv_RowBegin = hv_RowBegin[0].D();
+			hv_ColBegin = hv_ColBegin[0].D();
+			hv_RowEnd = hv_RowEnd[0].D();
+			hv_ColEnd = hv_ColEnd[0].D();
+		}
+		else
+		{
+			hv_RowBegin = hv_RowBegin[1].D();
+			hv_ColBegin = hv_ColBegin[1].D();
+			hv_RowEnd = hv_RowEnd[1].D();
+			hv_ColEnd = hv_ColEnd[1].D();
+		}
+	}
+
+
 	//计算该线段的延长线
 	LineOrientation(hv_RowBegin, hv_ColBegin, hv_RowEnd, hv_ColEnd, &hv_Phi);
 	hv_LineLength = 1000;
@@ -2553,4 +2639,20 @@ void CvisionDlg::OnRightBmpSaveAndShow()
 	hBmp = (HBITMAP)::LoadImage(AfxGetInstanceHandle(), L"D://实际屏幕版/HX/HX/right_show.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	m_vs_pic_right.SetBitmap(hBmp);    // 设置图片控件m_jzmPicture的位图图片为IDB_BITMAP1  
 	DeleteObject(hBmp);
+}
+
+//抓内框
+void CvisionDlg::OnBnClickedVsButtonNeikuang()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	zhuaneikuang_flag = true;
+	zhuawaikuang_flag = false;
+}
+
+
+void CvisionDlg::OnBnClickedVsButtonWaikuang()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	zhuawaikuang_flag = true;
+	zhuaneikuang_flag = false;
 }
