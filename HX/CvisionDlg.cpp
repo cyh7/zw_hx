@@ -79,6 +79,7 @@ int angle_l = -1;
 int row_r = -1;
 int column_r = -1;
 int angle_r = -1;
+int a, b, c, d ,e;//比较直线用的临时变量
 string filename;
 ////标准版左上角和左下角分别在各自像素坐标系下的表示
 //float coordinate_pixel_left_x = 0;
@@ -1293,17 +1294,23 @@ UINT locateleft(LPVOID pParam)
 		&hv_RowEnd_left, &hv_ColEnd_left, &hv_Nr1_left, &hv_Nc1_left, &hv_Dist1_left);
 	TupleLength(hv_RowBegin_left, &hv_Length_left);
 	//检查识别出了几条直线
-
-	if (hv_Length_left ==0||hv_Length_left >2)
+	
+	if (hv_Length_left ==0)
 	{
 		check_l_over = 0;
 		empty_location_data();
 		//AfxMessageBox(_T("左边没找到横直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域!"));
 		return 0;
 	}
+	if (hv_Length_left >5)
+	{
+		check_l_over = 0;
+		empty_location_data();
+		//AfxMessageBox(_T("左边找到4条以上横直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域!"));
+		return 0;
+	}
 	if (hv_Length_left == 2)
 	{
-		int a, b;
 		if (hv_ColBegin_left[0] > hv_ColEnd_left[0])
 			a = hv_ColEnd_left[0].D();
 		else
@@ -1327,7 +1334,149 @@ UINT locateleft(LPVOID pParam)
 			hv_ColEnd_left = hv_ColEnd_left[1].D();
 		}
 	}
-	
+
+	if (hv_Length_left == 3)
+	{
+		if (hv_ColBegin_left[0] > hv_ColEnd_left[0])
+			a = hv_ColEnd_left[0].D();
+		else
+			a = hv_ColBegin_left[0].D();
+		if (hv_ColBegin_left[1] > hv_ColEnd_left[1])
+			b = hv_ColEnd_left[1].D();
+		else
+			b = hv_ColBegin_left[1].D();
+		if (hv_ColBegin_left[2] > hv_ColEnd_left[2])
+			c = hv_ColEnd_left[2].D();
+		else
+			c = hv_ColBegin_left[2].D();
+		if (a < b && a < c )
+		{
+			hv_RowBegin_left = hv_RowBegin_left[0].D();
+			hv_ColBegin_left = hv_ColBegin_left[0].D();
+			hv_RowEnd_left = hv_RowEnd_left[0].D();
+			hv_ColEnd_left = hv_ColEnd_left[0].D();
+		}
+		if (b < a && b < c)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[1].D();
+			hv_ColBegin_left = hv_ColBegin_left[1].D();
+			hv_RowEnd_left = hv_RowEnd_left[1].D();
+			hv_ColEnd_left = hv_ColEnd_left[1].D();
+		}
+		if (c < a && c < b)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[2].D();
+			hv_ColBegin_left = hv_ColBegin_left[2].D();
+			hv_RowEnd_left = hv_RowEnd_left[2].D();
+			hv_ColEnd_left = hv_ColEnd_left[2].D();
+		}
+
+	}
+	if (hv_Length_left == 4)
+	{
+		if (hv_ColBegin_left[0] > hv_ColEnd_left[0])
+			a = hv_ColEnd_left[0].D();
+		else
+			a = hv_ColBegin_left[0].D();
+		if (hv_ColBegin_left[1] > hv_ColEnd_left[1])
+			b = hv_ColEnd_left[1].D();
+		else
+			b = hv_ColBegin_left[1].D();
+		if (hv_ColBegin_left[2] > hv_ColEnd_left[2])
+			c = hv_ColEnd_left[2].D();
+		else
+			c = hv_ColBegin_left[2].D();
+		if (hv_ColBegin_left[3] > hv_ColEnd_left[3])
+			d = hv_ColEnd_left[3].D();
+		else
+			d = hv_ColBegin_left[3].D();
+		if (a < b && a < c && a < d)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[0].D();
+			hv_ColBegin_left = hv_ColBegin_left[0].D();
+			hv_RowEnd_left = hv_RowEnd_left[0].D();
+			hv_ColEnd_left = hv_ColEnd_left[0].D();
+		}
+		if (b < a && b < c && b < d)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[1].D();
+			hv_ColBegin_left = hv_ColBegin_left[1].D();
+			hv_RowEnd_left = hv_RowEnd_left[1].D();
+			hv_ColEnd_left = hv_ColEnd_left[1].D();
+		}
+		if (c < a && c < b && c < d )
+		{
+			hv_RowBegin_left = hv_RowBegin_left[2].D();
+			hv_ColBegin_left = hv_ColBegin_left[2].D();
+			hv_RowEnd_left = hv_RowEnd_left[2].D();
+			hv_ColEnd_left = hv_ColEnd_left[2].D();
+		}
+		if (d < a && d < b && d < c)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[3].D();
+			hv_ColBegin_left = hv_ColBegin_left[3].D();
+			hv_RowEnd_left = hv_RowEnd_left[3].D();
+			hv_ColEnd_left = hv_ColEnd_left[3].D();
+		}
+	}
+	if (hv_Length_left == 5)
+	{
+		if (hv_ColBegin_left[0] > hv_ColEnd_left[0])
+			a = hv_ColEnd_left[0].D();
+		else
+			a = hv_ColBegin_left[0].D();
+		if (hv_ColBegin_left[1] > hv_ColEnd_left[1])
+			b = hv_ColEnd_left[1].D();
+		else
+			b = hv_ColBegin_left[1].D();
+		if (hv_ColBegin_left[2] > hv_ColEnd_left[2])
+			c = hv_ColEnd_left[2].D();
+		else
+			c = hv_ColBegin_left[2].D();
+		if (hv_ColBegin_left[3] > hv_ColEnd_left[3])
+			d = hv_ColEnd_left[3].D();
+		else
+			d = hv_ColBegin_left[3].D();
+		if (hv_ColBegin_left[4] > hv_ColEnd_left[4])
+			e = hv_ColEnd_left[4].D();
+		else
+			e = hv_ColBegin_left[4].D();
+		if (a < b && a < c && a < d && a < e)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[0].D();
+			hv_ColBegin_left = hv_ColBegin_left[0].D();
+			hv_RowEnd_left = hv_RowEnd_left[0].D();
+			hv_ColEnd_left = hv_ColEnd_left[0].D();
+		}
+		if (b < a && b < c && b < d && b < e)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[1].D();
+			hv_ColBegin_left = hv_ColBegin_left[1].D();
+			hv_RowEnd_left = hv_RowEnd_left[1].D();
+			hv_ColEnd_left = hv_ColEnd_left[1].D();
+		}
+		if (c < a && c < b && c < d && c < e)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[2].D();
+			hv_ColBegin_left = hv_ColBegin_left[2].D();
+			hv_RowEnd_left = hv_RowEnd_left[2].D();
+			hv_ColEnd_left = hv_ColEnd_left[2].D();
+		}
+		if (d < a && d < b && d < c && d < e)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[3].D();
+			hv_ColBegin_left = hv_ColBegin_left[3].D();
+			hv_RowEnd_left = hv_RowEnd_left[3].D();
+			hv_ColEnd_left = hv_ColEnd_left[3].D();
+		}
+		if (e < a && e < b && e < c && e < d)
+		{
+			hv_RowBegin_left = hv_RowBegin_left[4].D();
+			hv_ColBegin_left = hv_ColBegin_left[4].D();
+			hv_RowEnd_left = hv_RowEnd_left[4].D();
+			hv_ColEnd_left = hv_ColEnd_left[4].D();
+		}
+	}
 
 	//计算该线段的延长线
 	LineOrientation(hv_RowBegin_left, hv_ColBegin_left, hv_RowEnd_left, hv_ColEnd_left, &hv_Phi_left);
@@ -1349,11 +1498,18 @@ UINT locateleft(LPVOID pParam)
 		&hv_RowEnd1_left, &hv_ColEnd1_left, &hv_Nr_left, &hv_Nc_left, &hv_Dist_left);
 	TupleLength(hv_RowBegin1_left, &hv_Length1_left);
 	//检查识别出了几条直线
-	if (hv_Length1_left ==0|| hv_Length1_left >2)
+	if (hv_Length1_left ==0)
 	{
 		check_l_over = 0;
 		empty_location_data();
 		//AfxMessageBox(_T("左边没找到竖直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域"));
+		return 0;
+	}
+	if (hv_Length1_left > 4)
+	{
+		check_l_over = 0;
+		empty_location_data();
+		//AfxMessageBox(_T("左边找到4条以上竖直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域"));
 		return 0;
 	}
 	if (hv_Length1_left == 2)
@@ -1383,6 +1539,147 @@ UINT locateleft(LPVOID pParam)
 		}
 	}
 
+	if (hv_Length1_left == 3)
+	{
+		if (hv_RowBegin1_left[0] > hv_RowEnd1_left[0])
+			a = hv_RowEnd1_left[0].D();
+		else
+			a = hv_RowBegin1_left[0].D();
+		if (hv_RowBegin1_left[1] > hv_RowEnd1_left[1])
+			b = hv_RowEnd1_left[1].D();
+		else
+			b = hv_RowBegin1_left[1].D();
+		if (hv_RowBegin1_left[2] > hv_RowEnd1_left[2])
+			c = hv_RowEnd1_left[2].D();
+		else
+			c = hv_RowBegin1_left[2].D();
+		if (a < b && a < c)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[0].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[0].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[0].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[0].D();
+		}
+		if (b < a && b < c)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[1].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[1].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[1].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[1].D();
+		}
+		if (c < a && c < b)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[2].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[2].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[2].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[2].D();
+		}
+	}
+	if (hv_Length1_left == 4)
+	{
+		if (hv_RowBegin1_left[0] > hv_RowEnd1_left[0])
+			a = hv_RowEnd1_left[0].D();
+		else
+			a = hv_RowBegin1_left[0].D();
+		if (hv_RowBegin1_left[1] > hv_RowEnd1_left[1])
+			b = hv_RowEnd1_left[1].D();
+		else
+			b = hv_RowBegin1_left[1].D();
+		if (hv_RowBegin1_left[2] > hv_RowEnd1_left[2])
+			c = hv_RowEnd1_left[2].D();
+		else
+			c = hv_RowBegin1_left[2].D();
+		if (hv_RowBegin1_left[3] > hv_RowEnd1_left[3])
+			d = hv_RowEnd1_left[3].D();
+		else
+			d = hv_RowBegin1_left[2].D();
+		if (a < b && a < c && a < d)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[0].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[0].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[0].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[0].D();
+		}
+		if (b < a && b < c && b < d)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[1].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[1].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[1].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[1].D();
+		}
+		if (c < a && c < b && c < d)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[2].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[2].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[2].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[2].D();
+		}
+		if (d < a && d < b && d < c)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[3].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[3].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[3].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[3].D();
+		}
+	}
+	if (hv_Length1_left == 5)
+	{
+		if (hv_RowBegin1_left[0] > hv_RowEnd1_left[0])
+			a = hv_RowEnd1_left[0].D();
+		else
+			a = hv_RowBegin1_left[0].D();
+		if (hv_RowBegin1_left[1] > hv_RowEnd1_left[1])
+			b = hv_RowEnd1_left[1].D();
+		else
+			b = hv_RowBegin1_left[1].D();
+		if (hv_RowBegin1_left[2] > hv_RowEnd1_left[2])
+			c = hv_RowEnd1_left[2].D();
+		else
+			c = hv_RowBegin1_left[2].D();
+		if (hv_RowBegin1_left[3] > hv_RowEnd1_left[3])
+			d = hv_RowEnd1_left[3].D();
+		else
+			d = hv_RowBegin1_left[2].D();
+		if (hv_RowBegin1_left[4] > hv_RowEnd1_left[4])
+			e = hv_RowEnd1_left[4].D();
+		else
+			e = hv_RowBegin1_left[4].D();
+		if (a < b && a < c && a < d && a < e)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[0].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[0].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[0].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[0].D();
+		}
+		if (b < a && b < c && b < d && b < e)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[1].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[1].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[1].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[1].D();
+		}
+		if (c < a && c < b && c < d && c < e)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[2].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[2].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[2].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[2].D();
+		}
+		if (d < a && d < b && d < c && d <e)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[3].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[3].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[3].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[3].D();
+		}
+		if (e < a && e < b && e < c && e < d)
+		{
+			hv_RowBegin1_left = hv_RowBegin1_left[4].D();
+			hv_ColBegin1_left = hv_ColBegin1_left[4].D();
+			hv_RowEnd1_left = hv_RowEnd1_left[4].D();
+			hv_ColEnd1_left = hv_ColEnd1_left[4].D();
+		}
+	}
 
 	//计算该线段的延长线
 	LineOrientation(hv_RowBegin1_left, hv_ColBegin1_left, hv_RowEnd1_left, hv_ColEnd1_left, &hv_Phi1_left);
@@ -1400,6 +1697,15 @@ UINT locateleft(LPVOID pParam)
 
 	IntersectionLines(hv_RowBegin1_left, hv_ColBegin1_left, hv_RowEnd1_left, hv_ColEnd1_left, hv_RowBegin_left,
 		hv_ColBegin_left, hv_RowEnd_left, hv_ColEnd_left, &hv_Row_l, &hv_Column_l, &hv_IsOverlapping_left);
+	TupleLength(hv_Row_l, &hv_Length1_left);
+	if (hv_Length1_left == 0)
+	{
+		check_l_over = 0;
+		empty_location_data();
+		//AfxMessageBox(_T("左图象没找到角点"));
+		return 0;
+	}
+
 	hv_RowBegin_left += hv_Row1_left;
 	hv_RowBegin1_left += hv_Row1_left;
 	hv_RowEnd_left += hv_Row1_left;
@@ -1587,12 +1893,19 @@ UINT locateright(LPVOID pParam)
 		&hv_RowEnd, &hv_ColEnd, &hv_Nr1, &hv_Nc1, &hv_Dist1);
 	TupleLength(hv_RowBegin, &hv_Length);
 	//检查识别出了几条直线
-
-	if (hv_Length ==0|| hv_Length>2)
+ 
+	if (hv_Length ==0)
 	{
 		check_r_over = 0;
 		empty_location_data();
 		//AfxMessageBox(_T("右边没找到横直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域!"));
+		return 0;
+	}
+	if (hv_Length > 4)
+	{
+		check_r_over = 0;
+		empty_location_data();
+		//AfxMessageBox(_T("右边找到4条以上横直线! 定位失败,检测直角失败,请框选图片裁剪框时尽量选择直角附近光照对比明显的区域!"));
 		return 0;
 	}
 	if (hv_Length == 2)
@@ -1621,6 +1934,90 @@ UINT locateright(LPVOID pParam)
 			hv_ColEnd = hv_ColEnd[1].D();
 		}
 	}
+	if (hv_Length == 3)
+	{
+		if (hv_ColBegin[0] < hv_ColEnd[0])
+			a = hv_ColEnd[0].D();
+		else
+			a = hv_ColBegin[0].D();
+		if (hv_ColBegin[1] < hv_ColEnd[1])
+			b = hv_ColEnd[1].D();
+		else
+			b = hv_ColBegin[1].D();
+		if (hv_ColBegin[2] < hv_ColEnd[2])
+			c = hv_ColEnd[2].D();
+		else
+			c = hv_ColBegin[2].D();
+		if (a > b && a > c)
+		{
+			hv_RowBegin = hv_RowBegin[0].D();
+			hv_ColBegin = hv_ColBegin[0].D();
+			hv_RowEnd = hv_RowEnd[0].D();
+			hv_ColEnd = hv_ColEnd[0].D();
+		}
+		if (b > a && b > c)
+		{
+			hv_RowBegin = hv_RowBegin[1].D();
+			hv_ColBegin = hv_ColBegin_left[1].D();
+			hv_RowEnd = hv_RowEnd[1].D();
+			hv_ColEnd = hv_ColEnd[1].D();
+		}
+		if (c > a && c > b)
+		{
+			hv_RowBegin = hv_RowBegin[2].D();
+			hv_ColBegin = hv_ColBegin[2].D();
+			hv_RowEnd = hv_RowEnd[2].D();
+			hv_ColEnd = hv_ColEnd[2].D();
+		}
+	}
+	if (hv_Length == 4)
+	{
+		if (hv_ColBegin[0] < hv_ColEnd[0])
+			a = hv_ColEnd[0].D();
+		else
+			a = hv_ColBegin[0].D();
+		if (hv_ColBegin[1] < hv_ColEnd[1])
+			b = hv_ColEnd[1].D();
+		else
+			b = hv_ColBegin[1].D();
+		if (hv_ColBegin[2] < hv_ColEnd[2])
+			c = hv_ColEnd[2].D();
+		else
+			c = hv_ColBegin[2].D();
+		if (hv_ColBegin[3] < hv_ColEnd[3])
+			d = hv_ColEnd[3].D();
+		else
+			d = hv_ColBegin[3].D();
+		if (a > b && a > c && a > d)
+		{
+			hv_RowBegin = hv_RowBegin[0].D();
+			hv_ColBegin = hv_ColBegin[0].D();
+			hv_RowEnd = hv_RowEnd[0].D();
+			hv_ColEnd = hv_ColEnd[0].D();
+		}
+		if (b > a && b > c && b > d)
+		{
+			hv_RowBegin = hv_RowBegin[1].D();
+			hv_ColBegin = hv_ColBegin_left[1].D();
+			hv_RowEnd = hv_RowEnd[1].D();
+			hv_ColEnd = hv_ColEnd[1].D();
+		}
+		if (c > a && c > b && c > d)
+		{
+			hv_RowBegin = hv_RowBegin[2].D();
+			hv_ColBegin = hv_ColBegin[2].D();
+			hv_RowEnd = hv_RowEnd[2].D();
+			hv_ColEnd = hv_ColEnd[2].D();
+		}
+		if (d > a && d > b && d > c)
+		{
+			hv_RowBegin = hv_RowBegin[3].D();
+			hv_ColBegin = hv_ColBegin[3].D();
+			hv_RowEnd = hv_RowEnd[3].D();
+			hv_ColEnd = hv_ColEnd[3].D();
+		}
+	}
+	
 
 
 	//计算该线段的延长线
@@ -1650,7 +2047,6 @@ UINT locateright(LPVOID pParam)
 	}
 	if (hv_Length1 == 2)
 	{
-		int a,b;
 		if (hv_RowBegin1[0] > hv_RowEnd1[0])
 			a = hv_RowEnd1[0].D();
 		else
@@ -1674,6 +2070,89 @@ UINT locateright(LPVOID pParam)
 			hv_ColEnd1 = hv_ColEnd1[1].D();
 		}
 	}
+	if (hv_Length1 == 3)
+	{
+		if (hv_RowBegin1[0] > hv_RowEnd1[0])
+			a = hv_RowEnd1[0].D();
+		else
+			a = hv_RowBegin1[0].D();
+		if (hv_RowBegin1[1] > hv_RowEnd1[1])
+			b = hv_RowEnd1[1].D();
+		else
+			b = hv_RowBegin1[1].D();
+		if (hv_RowBegin1[2] > hv_RowEnd1[2])
+			c = hv_RowEnd1[2].D();
+		else
+			c = hv_RowBegin1[2].D();
+		if (a < b && a < c)
+		{
+			hv_RowBegin1 = hv_RowBegin1[0].D();
+			hv_ColBegin1 = hv_ColBegin1[0].D();
+			hv_RowEnd1 = hv_RowEnd1[0].D();
+			hv_ColEnd1 = hv_ColEnd1[0].D();
+		}
+		if (b < a && b < c)
+		{
+			hv_RowBegin1 = hv_RowBegin1[1].D();
+			hv_ColBegin1 = hv_ColBegin1[1].D();
+			hv_RowEnd1 = hv_RowEnd1[1].D();
+			hv_ColEnd1 = hv_ColEnd1[1].D();
+		}
+		if (c < a && c < b)
+		{
+			hv_RowBegin1 = hv_RowBegin1[2].D();
+			hv_ColBegin1 = hv_ColBegin1[2].D();
+			hv_RowEnd1 = hv_RowEnd1[2].D();
+			hv_ColEnd1 = hv_ColEnd1[2].D();
+		}
+	}
+	if (hv_Length1 == 4)
+	{
+		if (hv_RowBegin1[0] > hv_RowEnd1[0])
+			a = hv_RowEnd1[0].D();
+		else
+			a = hv_RowBegin1[0].D();
+		if (hv_RowBegin1[1] > hv_RowEnd1[1])
+			b = hv_RowEnd1[1].D();
+		else
+			b = hv_RowBegin1[1].D();
+		if (hv_RowBegin1[2] > hv_RowEnd1[2])
+			c = hv_RowEnd1[2].D();
+		else
+			c = hv_RowBegin1[2].D();
+		if (hv_RowBegin1[3] > hv_RowEnd1[3])
+			d = hv_RowEnd1[3].D();
+		else
+			d = hv_RowBegin1[2].D();
+		if (a < b && a < c && a < d)
+		{
+			hv_RowBegin1 = hv_RowBegin1[0].D();
+			hv_ColBegin1 = hv_ColBegin1[0].D();
+			hv_RowEnd1 = hv_RowEnd1[0].D();
+			hv_ColEnd1 = hv_ColEnd1[0].D();
+		}
+		if (b < a && b < c && b < d)
+		{
+			hv_RowBegin1 = hv_RowBegin1[1].D();
+			hv_ColBegin1 = hv_ColBegin1[1].D();
+			hv_RowEnd1 = hv_RowEnd1[1].D();
+			hv_ColEnd1 = hv_ColEnd1[1].D();
+		}
+		if (c < a && c < b && c < d)
+		{
+			hv_RowBegin1 = hv_RowBegin1[2].D();
+			hv_ColBegin1 = hv_ColBegin1[2].D();
+			hv_RowEnd1 = hv_RowEnd1[2].D();
+			hv_ColEnd1 = hv_ColEnd1[2].D();
+		}
+		if (d < a && d < b && d < c)
+		{
+			hv_RowBegin1 = hv_RowBegin1[3].D();
+			hv_ColBegin1 = hv_ColBegin1[3].D();
+			hv_RowEnd1 = hv_RowEnd1[3].D();
+			hv_ColEnd1 = hv_ColEnd1[3].D();
+		}
+	}
 
 	//计算该线段的延长线
 	LineOrientation(hv_RowBegin1, hv_ColBegin1, hv_RowEnd1, hv_ColEnd1, &hv_Phi1);
@@ -1691,7 +2170,14 @@ UINT locateright(LPVOID pParam)
 
 	IntersectionLines(hv_RowBegin1, hv_ColBegin1, hv_RowEnd1, hv_ColEnd1, hv_RowBegin,
 		hv_ColBegin, hv_RowEnd, hv_ColEnd, &hv_Row_r, &hv_Column_r, &hv_IsOverlapping);
-
+	TupleLength(hv_Row_r, &hv_Length1);
+	if (hv_Length1 == 0)
+	{
+		check_r_over = 0;
+		empty_location_data();
+		//AfxMessageBox(_T("右图象没找到角点"));
+		return 0;
+	}
 	hv_RowBegin += hv_Row1;
 	hv_RowBegin1 += hv_Row1;
 	hv_RowEnd += hv_Row1;
